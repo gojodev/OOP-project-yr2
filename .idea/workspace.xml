@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="96936678-6704-41fa-b861-9f9ddd498bc9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/stage1/HelloController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/stage1/Pong.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/stage1/hello-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex1.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex1.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex1.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex1.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex2.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex2.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex2.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex2.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex3.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../C Programming/lab/week 2/ex3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/.systemproject.vpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/.systemproject.vpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/.vp.preference" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/.vp.preference" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/LayoutPerspectiveData/_C4AVxKD.AACAQOEC.lod" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/LayoutPerspectiveData/_C4AVxKD.AACAQOEC.lod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/LayoutPerspectiveData/_C4AVxKD.AACAQOEMC.lod" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/LayoutPerspectiveData/_C4AVxKD.AACAQOEMC.lod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/projectsViewInfo/dN4ocLGFYHAE1wBZ" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/projectsViewInfo/dN4ocLGFYHAE1wBZ" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/sideComponents/Indexing.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/example/.vpprefdata/sideComponents/Indexing.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/submission/lab1.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/submission/lab1.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/submission/lab1.vpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../NoSQL Data Architectures/labs/week 1/submission/lab1.vpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2bjLb3xomxfctcA8mSmgprCHotD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Pong.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/eakol/OneDrive/Desktop/Emmanuel K/college stuff/year 2/semester 2/non - linear data structures and algorothims/labs"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="96936678-6704-41fa-b861-9f9ddd498bc9" name="Changes" comment="" />
+      <created>1706723613999</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706723613999</updated>
+    </task>
+    <servers />
+  </component>
+</project>
