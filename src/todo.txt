@@ -1,0 +1,13 @@
+- The Game Window is resizable, therefore the positions of racket, ball and
+  the other components should be adjusted when resizing.
+
+- Create a menu:
+•  Selecting Player 1 & player 2 names
+• Setting the speed of the ball
+• Adjust the dimensions (size, thickness) of the racket
+• Setting the score that ends the game (player wins if they score as many goals)
+• Exiting the game
+• Set how often the ball speed should increase
+
+- Model concepts (e.g. Ball, Player, etc.) are defined separately and
+abstraction/encapsulation is evident
