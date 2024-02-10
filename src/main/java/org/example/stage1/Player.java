@@ -2,26 +2,56 @@ package org.example.stage1;
 
 public class Player {
     private String name;
-    private float Xpos;
-    private float Ypos;
+    private double Xpos;
+    private double Ypos;
+    private double width;
+    private double height;
 
+    // Constructor
     public Player() {
         this.name = "Player";
     }
 
+    // Getters and Setters
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public float getXpos() {
-        return this.Xpos;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public float getYpos() {
-        return this.Ypos;
+    public double getXpos() {
+        return Xpos;
     }
 
-    public void setName(String _name) {
-        this.name = _name;
+    public void setXpos(double xpos) {
+        Xpos = xpos;
     }
+
+    public double getYpos() {
+        return Ypos;
+    }
+
+    public void setYpos(double ypos) {
+        Ypos = ypos;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
+
+    // Other methods for movement, collision detection, etc.
 }
