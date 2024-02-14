@@ -1,52 +1,56 @@
 package org.example.stage1;
 
+import java.util.Random;
+
 public class Ball {
-    private double Xpos;
-    private double Ypos;
-    private double Xdir;
-    private double Ydir;
-    private double speed;
+    private double xPos;
+    private double yPos;
+    private double xSpeed;
+    private double ySpeed;
 
-    // Getters and Setters
-    public double getXpos() {
-        return Xpos;
+    public Ball(double xPos, double yPos, double xSpeed, double ySpeed) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
     }
 
-    public void setXpos(double xpos) {
-        Xpos = xpos;
+    public double getXPos() {
+        return xPos;
     }
 
-    public double getYpos() {
-        return Ypos;
+    public double getYPos() {
+        return yPos;
     }
 
-    public void setYpos(double ypos) {
-        Ypos = ypos;
+    public double getXSpeed() {
+        return xSpeed;
     }
 
-    public double getXdir() {
-        return Xdir;
+    public double getYSpeed() {
+        return ySpeed;
     }
 
-    public void setXdir(double xdir) {
-        Xdir = xdir;
+    public void setXPos(double xPos) {
+        this.xPos = xPos;
     }
 
-    public double getYdir() {
-        return Ydir;
+    public void setYPos(double yPos) {
+        this.yPos = yPos;
     }
 
-    public void setYdir(double ydir) {
-        Ydir = ydir;
+    public void setXSpeed(double xSpeed) {
+        this.xSpeed = xSpeed;
     }
 
-    public double getSpeed() {
-        return speed;
+    public void setYSpeed(double ySpeed) {
+        this.ySpeed = ySpeed;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public static Ball createRandomizedBall(double xPos, double yPos) {
+        Random random = new Random();
+        double xSpeed = random.nextInt(2) == 0 ? 1 : -1;
+        double ySpeed = random.nextInt(2) == 0 ? 1 : -1;
+        return new Ball(xPos, yPos, xSpeed, ySpeed);
     }
-
-    // Other methods for updating position, resetting, etc.
 }
