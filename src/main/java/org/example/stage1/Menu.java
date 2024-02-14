@@ -1,7 +1,10 @@
 package org.example.stage1;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -27,7 +30,7 @@ public class Menu extends Application {
 
         // Create sliders for setting ball speed, racket size, racket thickness, score limit, and ball speed increase
         Label ballSpeedLabel = new Label("Ball Speed:");
-        ballSpeedSlider = new Slider(1, 1, 5); // Min: 1, Max: 10, Initial: 5
+        ballSpeedSlider = new Slider(1, 10, 5); // Min: 1, Max: 10, Initial: 5
         ballSpeedSlider.setShowTickLabels(true);
         ballSpeedSlider.setShowTickMarks(true);
 
@@ -64,6 +67,7 @@ public class Menu extends Application {
         // Create a VBox to hold the menu items
         VBox menuLayout = new VBox(20);
         menuLayout.setPadding(new Insets(20));
+        menuLayout.setAlignment(Pos.CENTER); // Center the menu vertically
         menuLayout.getChildren().addAll(
                 player1Label, player1NameTextField,
                 player2Label, player2NameTextField,

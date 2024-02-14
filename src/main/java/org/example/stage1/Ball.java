@@ -1,3 +1,4 @@
+// Ball.java
 package org.example.stage1;
 
 import java.util.Random;
@@ -49,8 +50,8 @@ public class Ball {
 
     public static Ball createRandomizedBall(double xPos, double yPos) {
         Random random = new Random();
-        double xSpeed = random.nextInt(2) == 0 ? 1 : -1;
-        double ySpeed = random.nextInt(2) == 0 ? 1 : -1;
+        double xSpeed = random.nextInt(3) == 0 ? 1 : -1;
+        double ySpeed = random.nextInt(3) == 0 ? 1 : -1;
         return new Ball(xPos, yPos, xSpeed, ySpeed);
     }
 }

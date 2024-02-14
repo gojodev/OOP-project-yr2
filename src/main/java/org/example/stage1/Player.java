@@ -1,3 +1,4 @@
+// Player.java
 package org.example.stage1;
 
 public class Player {
@@ -7,9 +8,12 @@ public class Player {
     private double width;
     private double height;
 
-    // Constructor
     public Player() {
         this.name = "Player";
+    }
+
+    public Player(String name) {
+        this.name = name;
     }
 
     // Getters and Setters
