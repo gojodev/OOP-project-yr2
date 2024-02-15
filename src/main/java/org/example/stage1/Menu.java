@@ -1,8 +1,6 @@
 package org.example.stage1;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,11 +12,8 @@ public class Menu extends Application {
 
     private TextField player1NameTextField;
     private TextField player2NameTextField;
-    private Slider ballSpeedSlider;
-    private Slider racketSizeSlider;
-    private Slider racketThicknessSlider;
-    private Slider scoreLimitSlider;
-    private Slider ballSpeedIncreaseSlider;
+    private TextField scoreLimitTextField;
+    private TextField ballSpeedIncreaseTextField;
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,31 +23,12 @@ public class Menu extends Application {
         Label player2Label = new Label("Player 2 Name:");
         player2NameTextField = new TextField();
 
-        // Create sliders for setting ball speed, racket size, racket thickness, score limit, and ball speed increase
-        Label ballSpeedLabel = new Label("Ball Speed:");
-        ballSpeedSlider = new Slider(1, 10, 5); // Min: 1, Max: 10, Initial: 5
-        ballSpeedSlider.setShowTickLabels(true);
-        ballSpeedSlider.setShowTickMarks(true);
-
-        Label racketSizeLabel = new Label("Racket Size:");
-        racketSizeSlider = new Slider(50, 200, 100); // Min: 50, Max: 200, Initial: 100
-        racketSizeSlider.setShowTickLabels(true);
-        racketSizeSlider.setShowTickMarks(true);
-
-        Label racketThicknessLabel = new Label("Racket Thickness:");
-        racketThicknessSlider = new Slider(5, 20, 10); // Min: 5, Max: 20, Initial: 10
-        racketThicknessSlider.setShowTickLabels(true);
-        racketThicknessSlider.setShowTickMarks(true);
-
+        // Create text fields for setting score limit and ball speed increase
         Label scoreLimitLabel = new Label("Score Limit:");
-        scoreLimitSlider = new Slider(1, 10, 5); // Min: 1, Max: 10, Initial: 5
-        scoreLimitSlider.setShowTickLabels(true);
-        scoreLimitSlider.setShowTickMarks(true);
+        scoreLimitTextField = new TextField("5");
 
         Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase:");
-        ballSpeedIncreaseSlider = new Slider(1, 5, 1); // Min: 1, Max: 5, Initial: 1
-        ballSpeedIncreaseSlider.setShowTickLabels(true);
-        ballSpeedIncreaseSlider.setShowTickMarks(true);
+        ballSpeedIncreaseTextField = new TextField("1");
 
         // Create a button to start the game
         Button startGameButton = new Button("Start Game");
@@ -60,9 +36,13 @@ public class Menu extends Application {
             try {
                 startGame(primaryStage);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                showAlert("Error", "Failed to start the game: " + e.getMessage());
             }
         });
+
+        // Create a button to quit the game
+        Button quitButton = new Button("Quit");
+        quitButton.setOnAction(event -> primaryStage.close());
 
         // Create a VBox to hold the menu items
         VBox menuLayout = new VBox(20);
@@ -71,12 +51,10 @@ public class Menu extends Application {
         menuLayout.getChildren().addAll(
                 player1Label, player1NameTextField,
                 player2Label, player2NameTextField,
-                ballSpeedLabel, ballSpeedSlider,
-                racketSizeLabel, racketSizeSlider,
-                racketThicknessLabel, racketThicknessSlider,
-                scoreLimitLabel, scoreLimitSlider,
-                ballSpeedIncreaseLabel, ballSpeedIncreaseSlider,
-                startGameButton
+                scoreLimitLabel, scoreLimitTextField,
+                ballSpeedIncreaseLabel, ballSpeedIncreaseTextField,
+                startGameButton,
+                quitButton
         );
 
         // Create a scene with the VBox
@@ -92,15 +70,31 @@ public class Menu extends Application {
     private void startGame(Stage primaryStage) throws Exception {
         String player1Name = player1NameTextField.getText();
         String player2Name = player2NameTextField.getText();
-        int ballSpeed = (int) ballSpeedSlider.getValue();
-        double racketSize = racketSizeSlider.getValue();
-        double racketThickness = racketThicknessSlider.getValue();
-        int scoreLimit = (int) scoreLimitSlider.getValue();
-        int ballSpeedIncrease = (int) ballSpeedIncreaseSlider.getValue();
+        int scoreLimit;
+        int ballSpeedIncrease;
+
+        // Parse score limit and ball speed increase from text fields
+        try {
+            scoreLimit = Integer.parseInt(scoreLimitTextField.getText());
+            ballSpeedIncrease = Integer.parseInt(ballSpeedIncreaseTextField.getText());
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Please enter valid numeric values for score limit and ball speed increase.");
+            return;
+        }
 
         // Instantiate and start the game with selected settings
-        Game game = new Game(player1Name, player2Name, ballSpeed, racketSize, racketThickness, scoreLimit, ballSpeedIncrease);
+        Game game = new Game(player1Name, player2Name, 5, 100, 10, scoreLimit, ballSpeedIncrease);
         game.start(primaryStage);
+    }
+
+
+    // Method to display an alert dialog
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     // Test the Menu class

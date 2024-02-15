@@ -20,7 +20,7 @@ import java.util.Random;
 public class Game extends Application {
 
     private int WIDTH = 800;
-    private int HEIGHT = 600;
+    private int HEIGHT = 800;
     private int PLAYER_HEIGHT = 100;
     private int PLAYER_WIDTH = 15;
     private double BALL_RADIUS = 15;
@@ -47,7 +47,6 @@ public class Game extends Application {
     private int scoreP2;
 
     // Constructor to initialize player names and game settings
-
     public Game(String player1Name, String player2Name, int ballSpeed, double racketSize, double racketThickness, int scoreLimit, int ballSpeedIncrease) {
         this.ballSpeed = ballSpeed;
         this.racketSize = racketSize;
@@ -58,6 +57,7 @@ public class Game extends Application {
         this.player2 = new Player(player2Name);
         this.ball = new Ball(WIDTH / 2, HEIGHT / 2, 0, 0);
     }
+
 
     @Override
     public void start(Stage stage) throws Exception {
