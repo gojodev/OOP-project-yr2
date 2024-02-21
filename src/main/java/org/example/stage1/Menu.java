@@ -26,19 +26,19 @@ public class Menu extends Application {
     public void start(Stage primaryStage) {
         // Create labels and text fields for entering player names
         Label player1Label = new Label("Player 1 Name:");
-        player1NameTextField = new TextField("player1");
+        player1NameTextField = new TextField("p1");
         Label player2Label = new Label("Player 2 Name:");
-        player2NameTextField = new TextField("player2");
+        player2NameTextField = new TextField("p2");
 
         // Create text fields for setting score limit and ball speed increase
-        Label scoreLimitLabel = new Label("Score Limit(1-5):");
+        Label scoreLimitLabel = new Label("Score Limit:");
         scoreLimitTextField = new TextField("3");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase(min 10 reccomended):");
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase(10 reccomended):");
         ballSpeedIncreaseTextField = new TextField("10");
 
-        Label racketSizeLabel = new Label("Racket SIze(1-5): ");
-        racketSizeFIeld = new TextField("2");
+        Label racketSizeLabel = new Label("Racket SIze(15 reccomended): ");
+        racketSizeFIeld = new TextField("15");
         racketSize = Integer.parseInt(racketSizeFIeld.getText());
 
         // Create a button to start the game
@@ -47,7 +47,7 @@ public class Menu extends Application {
             try {
                 startGame(primaryStage);
             } catch (Exception e) {
-                showAlert("Error", "Failed to start the game: " + e.getMessage());
+                System.out.println("Error Failed to start the game: " + e.getMessage());
             }
         });
 
@@ -92,24 +92,16 @@ public class Menu extends Application {
             scoreLimit = Integer.parseInt(scoreLimitTextField.getText());
             ballSpeedIncrease = Integer.parseInt(ballSpeedIncreaseTextField.getText());
         } catch (NumberFormatException e) {
-            showAlert("Error", "Please enter valid numeric values for score limit and ball speed increase.");
+            System.out.println("Error Please enter valid numeric values for score limit and ball speed increase.");
             return;
         }
 
         // Instantiate and start the game with selected settings
-        Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeedIncrease, racketSize);
+         Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeedIncrease, racketSize);
+//        Game game = new Game();
         game.start(primaryStage);
     }
 
-
-    // Method to display an alert dialog
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     /**
      * The entry point of application.

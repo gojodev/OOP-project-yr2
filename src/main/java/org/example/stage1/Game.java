@@ -17,6 +17,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Pane;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 
 /**
@@ -25,10 +26,10 @@ import javafx.application.Platform;
 public class Game extends Application { // Class declaration and inheritance from Application class
 
     // Variables declaration
-    private double WIDTH = 500;
-    private double HEIGHT = 500;
+    private double WIDTH = 600;
+    private double HEIGHT = 600;
     private double PLAYER_HEIGHT = 100;
-    private int PLAYER_WIDTH = 15;
+    private float PLAYER_WIDTH;
     private double BALL_R = 15;
     private double ballYSpeed = 1;
     private double ballXSpeed = 1;
@@ -44,11 +45,9 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private String p1;
     private String p2;
-    private float ballSpeed;
+    private int ballSpeed;
     private int scoreLimit;
-    private float ballSpeedIncrease;
-    private float racketSize;
-
+    private int ballSpeedIncrease;
     private Ball ball;
 
 
@@ -59,9 +58,9 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.p1 = "player1";
         this.p2 = "player2";
         this.ballSpeed = 10;
-        this.scoreLimit = 1;
-        this.ballSpeedIncrease = 1;
-        this.racketSize = 1;
+        this.scoreLimit = 3;
+        this.ballSpeedIncrease = 2;
+        this.PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
@@ -79,7 +78,13 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.p2 = p2;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
-        this.racketSize = racketSize;
+        this.PLAYER_WIDTH = racketSize;
+
+        System.out.println(p1);
+        System.out.println(p2);
+        System.out.println(scoreLimit);
+        System.out.println(ballSpeedIncrease);
+        System.out.println(racketSize);
     }
 
     // Application entry point
@@ -90,15 +95,11 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
 
-        // Set minimum width and height for the scene
-        root.setMinWidth(500);
-        root.setMinHeight(500);
-
         Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
         root.getChildren().add(canvas);
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(ballSpeed), e -> run(gc))); // Create a timeline for animation
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc))); // Create a timeline for animation
         tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
         // Set up mouse controls
@@ -111,9 +112,9 @@ public class Game extends Application { // Class declaration and inheritance fro
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 WIDTH = scene.getWidth();
                 HEIGHT = scene.getHeight();
-                playerTwoXPos = WIDTH - PLAYER_WIDTH;
                 canvas.setWidth(WIDTH);
                 canvas.setHeight(HEIGHT);
+                playerTwoXPos = WIDTH - PLAYER_WIDTH;
             }
         };
 
@@ -127,6 +128,12 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     // Method to handle the game logic and drawing
     private void run(GraphicsContext gc) {
+        // Check if the game window becomes blank
+        if (WIDTH == 0 || HEIGHT == 0) {
+            System.out.println("Error Game window dimensions are invalid. Please resize the window.");
+            return;
+        }
+
         gc.setFill(Color.BLACK); // Set the background color to black
         gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
 
@@ -136,15 +143,17 @@ public class Game extends Application { // Class declaration and inheritance fro
         if (gameStarted) {
             ball.move(); // Move the ball according to its current speed
 
+            // Randomize the ball's initial speed and direction
+            ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+            ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+
             ballXPos = ball.getXPos(); // Update ballXPos with the new x-position
             ballYPos = ball.getYPos(); // Update ballYPos with the new y-position
 
-            // Simple computer opponent following the ball
-            if (ballXPos < WIDTH - WIDTH / 4) {
-                playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
-            } else {
-                playerTwoYPos = ballYPos > playerTwoYPos + PLAYER_HEIGHT / 2 ? playerTwoYPos + 1 : playerTwoYPos - 1;
-            }
+            // always bet on player2
+             playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
+
+
 
             // Ensure the ball stays within the canvas boundaries
             if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
@@ -155,12 +164,18 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             // Check collision with player one paddle
             if (ballXPos <= playerOneXPos + PLAYER_WIDTH && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT) {
-                ball.reverseXSpeed(); // Reverse the ball's x-speed
+                ball.reverseXSpeed();
+                ball.reverseYSpeed();
+                ball.adjustSpeed(ballSpeedIncrease);
+                System.out.println("speed change");
             }
 
             // Check collision with player two paddle
             if (ballXPos + BALL_R >= playerTwoXPos && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) {
-                ball.reverseXSpeed(); // Reverse the ball's x-speed
+                ball.reverseXSpeed();
+                ball.reverseYSpeed();
+                ball.adjustSpeed(ballSpeedIncrease);
+                System.out.println("speed change");
             }
         } else {
             gc.setStroke(Color.WHITE); // Set stroke color to white
@@ -172,22 +187,23 @@ public class Game extends Application { // Class declaration and inheritance fro
                 System.out.println("Player1 won");
             } else if (scoreP2 == scoreLimit) {
                 gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
-                System.out.println("Player2 won");
                 Platform.exit(); // Close the game window
+                System.out.println("Player2 won");
             } else {
                 gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
             }
 
             ballXPos = WIDTH / 2; // Reset the ball's x-position
             ballYPos = HEIGHT / 2; // Reset the ball's y-position
-
-            // Randomize the ball's initial speed and direction
-            ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
-            ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
         }
 
         // Ensure the ball stays within the canvas boundaries
         if (ballYPos > HEIGHT || ballYPos < 0) ballYSpeed *= -1;
+
+        // Ensure player paddles stay within the bounds of the game window
+        playerOneYPos = Math.max(0, Math.min(playerOneYPos, HEIGHT - PLAYER_HEIGHT));
+        playerTwoYPos = Math.max(0, Math.min(playerTwoYPos, HEIGHT - PLAYER_HEIGHT));
+
 
         // If player one misses the ball, player two scores a point
         if (ballXPos < playerOneXPos - PLAYER_WIDTH) {
@@ -201,14 +217,6 @@ public class Game extends Application { // Class declaration and inheritance fro
             gameStarted = false;
         }
 
-        // Increase the speed after the ball hits a paddle
-        if (((ballXPos + BALL_R > playerTwoXPos) && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) ||
-                ((ballXPos < playerOneXPos + PLAYER_WIDTH) && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT)) {
-            ballYSpeed += 1 * Math.signum(ballYSpeed);
-            ballXSpeed += 1 * Math.signum(ballXSpeed);
-            ballXSpeed *= -1;
-            ballYSpeed *= -1;
-        }
 
         // Draw the score
         gc.setTextAlign(TextAlignment.CENTER);
@@ -219,8 +227,8 @@ public class Game extends Application { // Class declaration and inheritance fro
         Pane root = (Pane) gc.getCanvas().getScene().getRoot();
 
         // Draw player one and two paddles
-        gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
         gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
+        gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
     }
 
 
