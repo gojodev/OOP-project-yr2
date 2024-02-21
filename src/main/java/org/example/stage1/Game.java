@@ -18,6 +18,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
+import javafx.application.Platform;
+
 
 public class Game extends Application { // Class declaration and inheritance from Application class
 
@@ -51,7 +53,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.p1 = "player1";
         this.p2 = "player2";
         this.ballSpeed = 10;
-        this.scoreLimit = 3;
+        this.scoreLimit = 1;
         this.ballSpeedIncrease = 1;
         this.racketSize = 1;
         System.out.println("Please run from Menu.java first, to customise your inputs");
@@ -108,9 +110,6 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     // Method to handle the game logic and drawing
     private void run(GraphicsContext gc) {
-        // Clear the canvas
-        gc.clearRect(0, 0, WIDTH, HEIGHT);
-
         gc.setFill(Color.BLACK); // Set the background color to black
         gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
 
@@ -132,7 +131,18 @@ public class Game extends Application { // Class declaration and inheritance fro
         } else {
             gc.setStroke(Color.WHITE); // Set stroke color to white
             gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
-            gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
+
+            if (scoreP1 == scoreLimit) {
+                gc.strokeText("Player1 won", WIDTH / 2, HEIGHT / 2); // Display winner message
+                Platform.exit(); // Close the game window
+                System.out.println("Player1 won");
+            } else if (scoreP2 == scoreLimit) {
+                gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
+                System.out.println("Player2 won");
+                Platform.exit(); // Close the game window
+            } else {
+                gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
+            }
 
             ballXPos = WIDTH / 2; // Reset the ball's x-position
             ballYPos = HEIGHT / 2; // Reset the ball's y-position
@@ -177,15 +187,8 @@ public class Game extends Application { // Class declaration and inheritance fro
         // Draw player one and two paddles
         gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
         gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
-
-        if (scoreP1 == scoreLimit) {
-            System.out.println("Player1 won");
-        }
-
-        else {
-            System.out.println("Player2 won");
-        }
     }
+
 
     // Main method to launch the application
     public static void main(String[] args) {
