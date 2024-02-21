@@ -8,6 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * The type Menu.
+ */
 public class Menu extends Application {
 
     private TextField player1NameTextField;
@@ -31,7 +34,7 @@ public class Menu extends Application {
         Label scoreLimitLabel = new Label("Score Limit(1-5):");
         scoreLimitTextField = new TextField("3");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (1-10):");
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase(min 10 reccomended):");
         ballSpeedIncreaseTextField = new TextField("10");
 
         Label racketSizeLabel = new Label("Racket SIze(1-5): ");
@@ -108,7 +111,12 @@ public class Menu extends Application {
         alert.showAndWait();
     }
 
-    // Test the Menu class
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
+// Test the Menu class
     public static void main(String[] args) {
         launch(args);
     }

@@ -8,7 +8,6 @@ import javafx.application.Application; // Importing Application class from javaf
 import javafx.scene.Scene; // Importing Scene class from javafx.scene package
 import javafx.scene.canvas.Canvas; // Importing Canvas class from javafx.scene.canvas package
 import javafx.scene.canvas.GraphicsContext; // Importing GraphicsContext class from javafx.scene.canvas package
-import javafx.scene.layout.StackPane; // Importing StackPane class from javafx.scene.layout package
 import javafx.scene.paint.Color; // Importing Color class from javafx.scene.paint package
 import javafx.scene.text.Font; // Importing Font class from javafx.scene.text package
 import javafx.scene.text.TextAlignment; // Importing TextAlignment enum from javafx.scene.text package
@@ -17,10 +16,12 @@ import javafx.util.Duration; // Importing Duration class from javafx.util packag
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Pane;
-import javafx.scene.control.Button;
 import javafx.application.Platform;
 
 
+/**
+ * The type Game.
+ */
 public class Game extends Application { // Class declaration and inheritance from Application class
 
     // Variables declaration
@@ -48,7 +49,12 @@ public class Game extends Application { // Class declaration and inheritance fro
     private float ballSpeedIncrease;
     private float racketSize;
 
+    private Ball ball;
 
+
+    /**
+     * Instantiates a new Game.
+     */
     public Game() {
         this.p1 = "player1";
         this.p2 = "player2";
@@ -59,6 +65,15 @@ public class Game extends Application { // Class declaration and inheritance fro
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
+    /**
+     * Instantiates a new Game.
+     *
+     * @param p1                the p 1
+     * @param p2                the p 2
+     * @param scoreLimit        the score limit
+     * @param ballSpeedIncrease the ball speed increase
+     * @param racketSize        the racket size
+     */
     public Game(String p1, String p2, int scoreLimit, int ballSpeedIncrease, int racketSize) {
         this.p1 = p1;
         this.p2 = p2;
@@ -72,6 +87,8 @@ public class Game extends Application { // Class declaration and inheritance fro
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+
+        ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
 
         // Set minimum width and height for the scene
         root.setMinWidth(500);
@@ -117,8 +134,10 @@ public class Game extends Application { // Class declaration and inheritance fro
         gc.setFont(Font.font("Arial", 25)); // Set font size
 
         if (gameStarted) {
-            ballXPos += ballXSpeed; // Update ball's x-position based on speed
-            ballYPos += ballYSpeed; // Update ball's y-position based on speed
+            ball.move(); // Move the ball according to its current speed
+
+            ballXPos = ball.getXPos(); // Update ballXPos with the new x-position
+            ballYPos = ball.getYPos(); // Update ballYPos with the new y-position
 
             // Simple computer opponent following the ball
             if (ballXPos < WIDTH - WIDTH / 4) {
@@ -127,7 +146,22 @@ public class Game extends Application { // Class declaration and inheritance fro
                 playerTwoYPos = ballYPos > playerTwoYPos + PLAYER_HEIGHT / 2 ? playerTwoYPos + 1 : playerTwoYPos - 1;
             }
 
+            // Ensure the ball stays within the canvas boundaries
+            if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
+                ball.reverseYSpeed(); // Reverse the ball's y-speed
+            }
+
             gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R); // Draw the ball
+
+            // Check collision with player one paddle
+            if (ballXPos <= playerOneXPos + PLAYER_WIDTH && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT) {
+                ball.reverseXSpeed(); // Reverse the ball's x-speed
+            }
+
+            // Check collision with player two paddle
+            if (ballXPos + BALL_R >= playerTwoXPos && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) {
+                ball.reverseXSpeed(); // Reverse the ball's x-speed
+            }
         } else {
             gc.setStroke(Color.WHITE); // Set stroke color to white
             gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
@@ -190,7 +224,12 @@ public class Game extends Application { // Class declaration and inheritance fro
     }
 
 
-    // Main method to launch the application
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
+// Main method to launch the application
     public static void main(String[] args) {
         launch(args);
     }
