@@ -19,8 +19,8 @@ import java.util.Random;
 
 public class Game extends Application {
 
-    private int WIDTH = 800;
-    private int HEIGHT = 800;
+    private int WIDTH = 400;
+    private int HEIGHT = 400;
     private int PLAYER_HEIGHT = 100;
     private int PLAYER_WIDTH = 15;
     private double BALL_RADIUS = 15;
@@ -63,21 +63,21 @@ public class Game extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("PONG Game Project");
 
+        stage.setMinHeight(600);
+        stage.setHeight(600);
+
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Adjust positions when window size changes
+
+        // this resizes the black cavnas itself
         canvas.widthProperty().addListener((obs, oldVal, newVal) -> {
             WIDTH = newVal.intValue();
-            playerTwoXPos = WIDTH - PLAYER_WIDTH;
-            ballXPos = WIDTH / 2;
         });
 
         canvas.heightProperty().addListener((obs, oldVal, newVal) -> {
             HEIGHT = newVal.intValue();
-            playerOneYPos = HEIGHT / 2;
-            playerTwoYPos = HEIGHT / 2;
-            ballYPos = HEIGHT / 2;
         });
 
         Timeline tl = new Timeline(new KeyFrame(Duration.millis(ballSpeed), e -> run(gc)));
@@ -117,8 +117,22 @@ public class Game extends Application {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, WIDTH, HEIGHT);
 
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.BLUE);
         gc.setFont(Font.font(25));
+
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        // this resizes the black cavnas itself
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> {
+            WIDTH = newVal.intValue();
+            System.out.println("WIDTH" + WIDTH);
+        });
+
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> {
+            HEIGHT = newVal.intValue();
+            System.out.println("HEIGHT" + HEIGHT);
+        });
+
+
 
         if (gameStarted) {
             ballXPos += ballXSpeed;
@@ -132,7 +146,7 @@ public class Game extends Application {
 
             gc.fillOval(ballXPos, ballYPos, BALL_RADIUS, BALL_RADIUS);
         } else {
-            gc.setStroke(Color.WHITE);
+            gc.setStroke(Color.BLUE);
             gc.strokeText("Click to Start", WIDTH / 2, HEIGHT / 2);
 
             ballXPos = WIDTH / 2;

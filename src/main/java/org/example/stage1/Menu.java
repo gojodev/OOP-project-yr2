@@ -24,10 +24,10 @@ public class Menu extends Application {
         player2NameTextField = new TextField();
 
         // Create text fields for setting score limit and ball speed increase
-        Label scoreLimitLabel = new Label("Score Limit:");
+        Label scoreLimitLabel = new Label("Score Limit(1-5):");
         scoreLimitTextField = new TextField("5");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase:");
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (1-5):");
         ballSpeedIncreaseTextField = new TextField("1");
 
         // Create a button to start the game
@@ -58,12 +58,15 @@ public class Menu extends Application {
         );
 
         // Create a scene with the VBox
-        Scene scene = new Scene(menuLayout, 800, 800);
+        Scene scene = new Scene(menuLayout, 400, 400);
+
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Pong Game Settings");
+        primaryStage.setTitle("Pong Game Menu");
         primaryStage.show();
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(600);
     }
 
     // Method to start the game with player names and selected settings
