@@ -1,4 +1,3 @@
-// Player.java
 package org.example.stage1;
 
 public class Player {
@@ -16,7 +15,6 @@ public class Player {
         this.name = name;
     }
 
-    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -56,6 +54,4 @@ public class Player {
     public void setHeight(double height) {
         this.height = height;
     }
-
-    // Other methods for movement, collision detection, etc.
 }

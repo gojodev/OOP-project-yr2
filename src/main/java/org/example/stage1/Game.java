@@ -1,223 +1,193 @@
-package org.example.stage1;
+package org.example.stage1; // Package declaration, grouping related classes
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import org.example.stage1.Ball;
-import org.example.stage1.Player;
+import java.util.Random; // Importing the Random class from java.util package
 
-import java.util.Random;
+import javafx.animation.KeyFrame; // Importing KeyFrame class from javafx.animation package
+import javafx.animation.Timeline; // Importing Timeline class from javafx.animation package
+import javafx.application.Application; // Importing Application class from javafx.application package
+import javafx.scene.Scene; // Importing Scene class from javafx.scene package
+import javafx.scene.canvas.Canvas; // Importing Canvas class from javafx.scene.canvas package
+import javafx.scene.canvas.GraphicsContext; // Importing GraphicsContext class from javafx.scene.canvas package
+import javafx.scene.layout.StackPane; // Importing StackPane class from javafx.scene.layout package
+import javafx.scene.paint.Color; // Importing Color class from javafx.scene.paint package
+import javafx.scene.text.Font; // Importing Font class from javafx.scene.text package
+import javafx.scene.text.TextAlignment; // Importing TextAlignment enum from javafx.scene.text package
+import javafx.stage.Stage; // Importing Stage class from javafx.stage package
+import javafx.util.Duration; // Importing Duration class from javafx.util package
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
 
-public class Game extends Application {
+public class Game extends Application { // Class declaration and inheritance from Application class
 
-    private int WIDTH = 400;
-    private int HEIGHT = 400;
-    private int PLAYER_HEIGHT = 100;
+    // Variables declaration
+    private double WIDTH = 500;
+    private double HEIGHT = 500;
+    private double PLAYER_HEIGHT = 100;
     private int PLAYER_WIDTH = 15;
-    private double BALL_RADIUS = 15;
-    private int ballYSpeed = 1;
-    private int ballXSpeed = 1;
-    private double ballXPos = WIDTH / 2;
-    private double ballYPos = HEIGHT / 2;
-    private boolean gameStarted;
+    private double BALL_R = 15;
+    private double ballYSpeed = 1;
+    private double ballXSpeed = 1;
     private double playerOneYPos = HEIGHT / 2;
     private double playerTwoYPos = HEIGHT / 2;
-    private double playerOneXPos = 0;
+    private double ballXPos = WIDTH / 2;
+    private double ballYPos = HEIGHT / 2;
+    private int scoreP1 = 0;
+    private int scoreP2 = 0;
+    private boolean gameStarted;
+    private int playerOneXPos = 0; // Initial x-position of player one paddle
     private double playerTwoXPos = WIDTH - PLAYER_WIDTH;
-    private int ballSpeed;
-    private double racketSize;
-    private double racketThickness;
+
+    private String p1;
+    private String p2;
+    private float ballSpeed;
     private int scoreLimit;
-    private int ballSpeedIncrease;
+    private float ballSpeedIncrease;
+    private float racketSize;
 
-    private Player player1;
-    private Player player2;
-    private Ball ball;
 
-    private int scoreP1;
-    private int scoreP2;
+    public Game() {
+        this.p1 = "player1";
+        this.p2 = "player2";
+        this.ballSpeed = 10;
+        this.scoreLimit = 3;
+        this.ballSpeedIncrease = 1;
+        this.racketSize = 1;
+        System.out.println("Please run from Menu.java first, to customise your inputs");
+    }
 
-    // Constructor to initialize player names and game settings
-    public Game(String player1Name, String player2Name, int ballSpeed, double racketSize, double racketThickness, int scoreLimit, int ballSpeedIncrease) {
-        this.ballSpeed = ballSpeed;
-        this.racketSize = racketSize;
-        this.racketThickness = racketThickness;
+    public Game(String p1, String p2, int scoreLimit, int ballSpeedIncrease, int racketSize) {
+        this.p1 = p1;
+        this.p2 = p2;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
-        this.player1 = new Player(player1Name);
-        this.player2 = new Player(player2Name);
-        this.ball = new Ball(WIDTH / 2, HEIGHT / 2, 0, 0);
+        this.racketSize = racketSize;
     }
 
+    // Application entry point
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("PONG Game Project");
+        Pane root = new Pane();
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("PONG Game Project");
+        // Set minimum width and height for the scene
+        root.setMinWidth(500);
+        root.setMinHeight(500);
 
-        stage.setMinHeight(600);
-        stage.setHeight(600);
+        Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
+        GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
+        root.getChildren().add(canvas);
 
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(ballSpeed), e -> run(gc))); // Create a timeline for animation
+        tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        // Set up mouse controls
+        canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
+        canvas.setOnMouseClicked(e -> gameStarted = true); // Start the game on mouse click
 
+        // Adjust positions when window is resized
+        ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                WIDTH = scene.getWidth();
+                HEIGHT = scene.getHeight();
+                playerTwoXPos = WIDTH - PLAYER_WIDTH;
+                canvas.setWidth(WIDTH);
+                canvas.setHeight(HEIGHT);
+            }
+        };
 
-        // this resizes the black cavnas itself
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> {
-            WIDTH = newVal.intValue();
-        });
+        scene.widthProperty().addListener(resizeListener);
+        scene.heightProperty().addListener(resizeListener);
 
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> {
-            HEIGHT = newVal.intValue();
-        });
-
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(ballSpeed), e -> run(gc)));
-        tl.setCycleCount(Timeline.INDEFINITE);
-
-        canvas.setOnMouseMoved(this::handleMouseMove);
-        canvas.setOnMouseClicked(e -> gameStarted = true);
-
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            double newWidth = newVal.doubleValue();
-            canvas.setWidth(newWidth);
-            playerOneXPos = 0;
-            playerTwoXPos = newWidth - PLAYER_WIDTH;
-            ballXPos = newWidth / 2;
-        });
-
-        stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            double newHeight = newVal.doubleValue();
-            canvas.setHeight(newHeight);
-            playerOneYPos = newHeight / 2;
-            playerTwoYPos = newHeight / 2;
-            ballYPos = newHeight / 2;
-        });
-
-        stage.setScene(new Scene(new StackPane(canvas)));
-        stage.setResizable(true);
-
-        stage.show();
-        tl.play();
+        primaryStage.setScene(scene); // Set the scene with the canvas
+        primaryStage.show(); // Display the stage
+        tl.play(); // Start the animation timeline
     }
 
-    private void handleMouseMove(MouseEvent event) {
-        playerOneYPos = event.getY();
-    }
-
+    // Method to handle the game logic and drawing
     private void run(GraphicsContext gc) {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, WIDTH, HEIGHT);
+        // Clear the canvas
+        gc.clearRect(0, 0, WIDTH, HEIGHT);
 
-        gc.setFill(Color.BLUE);
-        gc.setFont(Font.font(25));
+        gc.setFill(Color.BLACK); // Set the background color to black
+        gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
 
-        Canvas canvas = new Canvas(WIDTH, HEIGHT);
-        // this resizes the black cavnas itself
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> {
-            WIDTH = newVal.intValue();
-            System.out.println("WIDTH" + WIDTH);
-        });
-
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> {
-            HEIGHT = newVal.intValue();
-            System.out.println("HEIGHT" + HEIGHT);
-        });
-
-
+        gc.setFill(Color.WHITE); // Set text color to white
+        gc.setFont(Font.font("Arial", 25)); // Set font size
 
         if (gameStarted) {
-            ballXPos += ballXSpeed;
-            ballYPos += ballYSpeed;
+            ballXPos += ballXSpeed; // Update ball's x-position based on speed
+            ballYPos += ballYSpeed; // Update ball's y-position based on speed
 
+            // Simple computer opponent following the ball
             if (ballXPos < WIDTH - WIDTH / 4) {
                 playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
             } else {
                 playerTwoYPos = ballYPos > playerTwoYPos + PLAYER_HEIGHT / 2 ? playerTwoYPos + 1 : playerTwoYPos - 1;
             }
 
-            gc.fillOval(ballXPos, ballYPos, BALL_RADIUS, BALL_RADIUS);
+            gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R); // Draw the ball
         } else {
-            gc.setStroke(Color.BLUE);
-            gc.strokeText("Click to Start", WIDTH / 2, HEIGHT / 2);
+            gc.setStroke(Color.WHITE); // Set stroke color to white
+            gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
+            gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
 
-            ballXPos = WIDTH / 2;
-            ballYPos = HEIGHT / 2;
+            ballXPos = WIDTH / 2; // Reset the ball's x-position
+            ballYPos = HEIGHT / 2; // Reset the ball's y-position
 
-            ballXSpeed = new Random().nextBoolean() ? 1 : -1;
-            ballYSpeed = new Random().nextBoolean() ? 1 : -1;
+            // Randomize the ball's initial speed and direction
+            ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+            ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
         }
 
-        if (ballYPos > HEIGHT - BALL_RADIUS || ballYPos < BALL_RADIUS) {
-            ballYSpeed *= -1;
-        }
+        // Ensure the ball stays within the canvas boundaries
+        if (ballYPos > HEIGHT || ballYPos < 0) ballYSpeed *= -1;
 
+        // If player one misses the ball, player two scores a point
         if (ballXPos < playerOneXPos - PLAYER_WIDTH) {
             scoreP2++;
-            if (scoreP2 >= scoreLimit) {
-                resetGame();
-            } else {
-                gameStarted = false;
-            }
+            gameStarted = false;
         }
 
+        // If player two misses the ball, player one scores a point
         if (ballXPos > playerTwoXPos + PLAYER_WIDTH) {
             scoreP1++;
-            if (scoreP1 >= scoreLimit) {
-                resetGame();
-            } else {
-                gameStarted = false;
-            }
+            gameStarted = false;
         }
 
-        handleBallRacketCollision();
-
-        String player1Name = player1.getName();
-        String player2Name = player2.getName();
-        String scoreText = scoreP1 + " \t\t " + scoreP2;
-
-        Font font = gc.getFont();
-        double textWidth1 = font.getSize() * player1Name.length() * 0.6;
-        double textWidth2 = font.getSize() * player2Name.length() * 0.6;
-        double textWidthScore = font.getSize() * scoreText.length() * 0.6;
-
-        double xPlayer1 = (WIDTH / 2) - textWidth1 / 2;
-        double xPlayer2 = (WIDTH / 2) + textWidth2 / 2;
-        double xScore = (WIDTH / 2) - textWidthScore / 2;
-
-        gc.fillText(player1Name, xPlayer1, 50);
-        gc.fillText(player2Name, xPlayer2, 50);
-        gc.fillText(scoreText, xScore, 100);
-
-        gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
-        gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
-    }
-
-    private void resetGame() {
-        scoreP1 = 0;
-        scoreP2 = 0;
-        playerOneYPos = HEIGHT / 2;
-        playerTwoYPos = HEIGHT / 2;
-    }
-
-    private void handleBallRacketCollision() {
-        if (((ballXPos + BALL_RADIUS > playerTwoXPos) && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) ||
+        // Increase the speed after the ball hits a paddle
+        if (((ballXPos + BALL_R > playerTwoXPos) && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) ||
                 ((ballXPos < playerOneXPos + PLAYER_WIDTH) && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT)) {
-            ballYSpeed += Math.signum(ballYSpeed);
-            ballXSpeed += Math.signum(ballXSpeed);
+            ballYSpeed += 1 * Math.signum(ballYSpeed);
+            ballXSpeed += 1 * Math.signum(ballXSpeed);
             ballXSpeed *= -1;
             ballYSpeed *= -1;
         }
+
+        // Draw the score
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.fillText(p1 + ": " + scoreP1, WIDTH / 4, 50);
+        gc.fillText(p2 + ": " + scoreP2, WIDTH * 3 / 4, 50);
+
+        // Access the root pane of the existing scene
+        Pane root = (Pane) gc.getCanvas().getScene().getRoot();
+
+        // Draw player one and two paddles
+        gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
+        gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
+
+        if (scoreP1 == scoreLimit) {
+            System.out.println("Player1 won");
+        }
+
+        else {
+            System.out.println("Player2 won");
+        }
     }
 
+    // Main method to launch the application
     public static void main(String[] args) {
         launch(args);
     }

@@ -15,20 +15,28 @@ public class Menu extends Application {
     private TextField scoreLimitTextField;
     private TextField ballSpeedIncreaseTextField;
 
+    private TextField racketSizeFIeld;
+
+    private int racketSize;
+
     @Override
     public void start(Stage primaryStage) {
         // Create labels and text fields for entering player names
         Label player1Label = new Label("Player 1 Name:");
-        player1NameTextField = new TextField();
+        player1NameTextField = new TextField("player1");
         Label player2Label = new Label("Player 2 Name:");
-        player2NameTextField = new TextField();
+        player2NameTextField = new TextField("player2");
 
         // Create text fields for setting score limit and ball speed increase
         Label scoreLimitLabel = new Label("Score Limit(1-5):");
-        scoreLimitTextField = new TextField("5");
+        scoreLimitTextField = new TextField("3");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (1-5):");
-        ballSpeedIncreaseTextField = new TextField("1");
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (1-10):");
+        ballSpeedIncreaseTextField = new TextField("10");
+
+        Label racketSizeLabel = new Label("Racket SIze(1-5): ");
+        racketSizeFIeld = new TextField("2");
+        racketSize = Integer.parseInt(racketSizeFIeld.getText());
 
         // Create a button to start the game
         Button startGameButton = new Button("Start Game");
@@ -53,13 +61,13 @@ public class Menu extends Application {
                 player2Label, player2NameTextField,
                 scoreLimitLabel, scoreLimitTextField,
                 ballSpeedIncreaseLabel, ballSpeedIncreaseTextField,
+                racketSizeLabel, racketSizeFIeld,
                 startGameButton,
                 quitButton
         );
 
         // Create a scene with the VBox
-        Scene scene = new Scene(menuLayout, 400, 400);
-
+        Scene scene = new Scene(menuLayout, 500, 500);
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
@@ -86,7 +94,7 @@ public class Menu extends Application {
         }
 
         // Instantiate and start the game with selected settings
-        Game game = new Game(player1Name, player2Name, 5, 100, 10, scoreLimit, ballSpeedIncrease);
+        Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeedIncrease, racketSize);
         game.start(primaryStage);
     }
 

@@ -54,4 +54,14 @@ public class Ball {
         double ySpeed = random.nextInt(3) == 0 ? 1 : -1;
         return new Ball(xPos, yPos, xSpeed, ySpeed);
     }
+
+    // Method to reverse the xSpeed of the ball
+    public void reverseXSpeed() {
+        xSpeed *= -1;
+    }
+
+    // Method to reverse the ySpeed of the ball
+    public void reverseYSpeed() {
+        ySpeed *= -1;
+    }
 }
