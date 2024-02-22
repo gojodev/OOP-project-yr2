@@ -26,8 +26,8 @@ import javafx.scene.control.Alert;
 public class Game extends Application { // Class declaration and inheritance from Application class
 
     // Variables declaration
-    private double WIDTH = 600;
-    private double HEIGHT = 600;
+    private double WIDTH = 450;
+    private double HEIGHT = 450;
     private double PLAYER_HEIGHT = 100;
     private float PLAYER_WIDTH;
     private double BALL_R = 15;
@@ -45,9 +45,9 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private String p1;
     private String p2;
-    private int ballSpeed;
+    private double ballSpeed;
     private int scoreLimit;
-    private int ballSpeedIncrease;
+    private double ballSpeedIncrease;
     private Ball ball;
 
 
@@ -57,9 +57,9 @@ public class Game extends Application { // Class declaration and inheritance fro
     public Game() {
         this.p1 = "player1";
         this.p2 = "player2";
-        this.ballSpeed = 10;
+        this.ballSpeed = 0.5;
         this.scoreLimit = 3;
-        this.ballSpeedIncrease = 2;
+        this.ballSpeedIncrease = 0.5;
         this.PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
@@ -73,9 +73,10 @@ public class Game extends Application { // Class declaration and inheritance fro
      * @param ballSpeedIncrease the ball speed increase
      * @param racketSize        the racket size
      */
-    public Game(String p1, String p2, int scoreLimit, int ballSpeedIncrease, int racketSize) {
+    public Game(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
         this.p1 = p1;
         this.p2 = p2;
+        this.ballSpeed = ballSpeed;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
         this.PLAYER_WIDTH = racketSize;
@@ -185,7 +186,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                 gc.strokeText("Player1 won", WIDTH / 2, HEIGHT / 2); // Display winner message
                 Platform.exit(); // Close the game window
                 System.out.println("Player1 won");
-            } else if (scoreP2 == scoreLimit) {
+            } if (scoreP2 == scoreLimit) {
                 gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
                 Platform.exit(); // Close the game window
                 System.out.println("Player2 won");

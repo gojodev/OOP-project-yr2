@@ -85,7 +85,6 @@ public class Ball {
     // Method to adjust the ball's speed by a given percentage
     public void adjustSpeed(double increase) {
         // Increase the speed by the given percentage
-        increase = 0.5*increase;
         this.xSpeed += increase;
         this.ySpeed += increase;
     }

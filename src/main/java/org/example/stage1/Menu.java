@@ -18,15 +18,16 @@ public class Menu extends Application {
     private TextField scoreLimitTextField;
     private TextField ballSpeedIncreaseTextField;
 
-    private TextField racketSizeFIeld;
+    private TextField racketWidthField;
+    private TextField ballSpeedTextField;
 
-    private int racketSize;
 
     @Override
     public void start(Stage primaryStage) {
         // Create labels and text fields for entering player names
         Label player1Label = new Label("Player 1 Name:");
         player1NameTextField = new TextField("p1");
+
         Label player2Label = new Label("Player 2 Name:");
         player2NameTextField = new TextField("p2");
 
@@ -34,12 +35,14 @@ public class Menu extends Application {
         Label scoreLimitLabel = new Label("Score Limit:");
         scoreLimitTextField = new TextField("3");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase(10 reccomended):");
-        ballSpeedIncreaseTextField = new TextField("10");
+        Label ballSpeedLabel = new Label("Ball Speed (0.5 recommended):");
+        ballSpeedTextField = new TextField("0.5");
 
-        Label racketSizeLabel = new Label("Racket SIze(15 reccomended): ");
-        racketSizeFIeld = new TextField("15");
-        racketSize = Integer.parseInt(racketSizeFIeld.getText());
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (0.5 recommended):");
+        ballSpeedIncreaseTextField = new TextField("0.5");
+
+        Label racketSizeLabel = new Label("Racket SIze(15 recommended): ");
+        racketWidthField = new TextField("15");
 
         // Create a button to start the game
         Button startGameButton = new Button("Start Game");
@@ -63,14 +66,15 @@ public class Menu extends Application {
                 player1Label, player1NameTextField,
                 player2Label, player2NameTextField,
                 scoreLimitLabel, scoreLimitTextField,
+                ballSpeedLabel, ballSpeedTextField,
                 ballSpeedIncreaseLabel, ballSpeedIncreaseTextField,
-                racketSizeLabel, racketSizeFIeld,
+                racketSizeLabel, racketWidthField,
                 startGameButton,
                 quitButton
         );
 
         // Create a scene with the VBox
-        Scene scene = new Scene(menuLayout, 500, 500);
+        Scene scene = new Scene(menuLayout, 450, 450);
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
@@ -84,20 +88,13 @@ public class Menu extends Application {
     private void startGame(Stage primaryStage) throws Exception {
         String player1Name = player1NameTextField.getText();
         String player2Name = player2NameTextField.getText();
-        int scoreLimit;
-        int ballSpeedIncrease;
-
-        // Parse score limit and ball speed increase from text fields
-        try {
-            scoreLimit = Integer.parseInt(scoreLimitTextField.getText());
-            ballSpeedIncrease = Integer.parseInt(ballSpeedIncreaseTextField.getText());
-        } catch (NumberFormatException e) {
-            System.out.println("Error Please enter valid numeric values for score limit and ball speed increase.");
-            return;
-        }
+        int scoreLimit = Integer.parseInt(scoreLimitTextField.getText());
+        double ballSpeed = Double.parseDouble(ballSpeedTextField.getText());
+        double ballSpeedIncrease = Double.parseDouble(ballSpeedIncreaseTextField.getText());
+        int racketSize = Integer.parseInt(racketWidthField.getText());
 
         // Instantiate and start the game with selected settings
-         Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeedIncrease, racketSize);
+         Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeed, ballSpeedIncrease, racketSize);
 //        Game game = new Game();
         game.start(primaryStage);
     }
