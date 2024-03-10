@@ -82,12 +82,18 @@ public class Ball {
         this.ySpeed = ySpeed;
     }
 
-    // Method to adjust the ball's speed by a given percentage
+    /**
+     * Adjust speed.
+     *
+     * @param increase the increase
+     */
+// Method to adjust the ball's speed by a given percentage
     public void adjustSpeed(double increase) {
         // Increase the speed by the given percentage
         this.xSpeed += increase;
         this.ySpeed += increase;
     }
+
 
     /**
      * Create randomized ball.
@@ -120,7 +126,7 @@ public class Ball {
     }
 
     /**
-     * Move.
+     * Move the ball with whatever speed it currently has.
      */
     public void move() {
         xPos += xSpeed;

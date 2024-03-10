@@ -64,12 +64,14 @@ public class Game extends Application { // Class declaration and inheritance fro
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
+
     /**
      * Instantiates a new Game.
      *
      * @param p1                the p 1
      * @param p2                the p 2
      * @param scoreLimit        the score limit
+     * @param ballSpeed         the ball speed
      * @param ballSpeedIncrease the ball speed increase
      * @param racketSize        the racket size
      */
@@ -153,8 +155,6 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             // always bet on player2
              playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
-
-
 
             // Ensure the ball stays within the canvas boundaries
             if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
