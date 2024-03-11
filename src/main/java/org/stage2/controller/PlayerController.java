@@ -4,9 +4,6 @@ import org.stage2.model.Player;
 import org.stage2.view.PlayerView;
 
 public class PlayerController {
-    // Model Object
-    // View Object
-
     private Player model;
     public PlayerController(Player model) {
         this.model = model;
@@ -16,5 +13,4 @@ public class PlayerController {
     public static void move(Player player, int direction, double currentYpos) {
         player.setyPos(currentYpos + direction);
     }
-
 }

@@ -1,16 +1,25 @@
 // Ball.java
 package org.stage2.model;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Circle;
+
 import java.util.Random;
 
 /**
  * The type Ball.
  */
-public class Ball implements BallInterface{
+public class Ball  {
     private double xPos;
     private double yPos;
     private double xSpeed = 1;
     private double ySpeed = 1;
+
+    private double BALL_R = 15;
+
+    private Circle ballz;
+
 
     /**
      * Instantiates a new Ball.
@@ -25,6 +34,7 @@ public class Ball implements BallInterface{
         this.yPos = yPos;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
+        this.ballz = new Circle(BALL_R * 2);
     }
 
     /**
@@ -45,7 +55,6 @@ public class Ball implements BallInterface{
         return yPos;
     }
 
-
     /**
      * Sets x pos.
      *
@@ -62,26 +71,6 @@ public class Ball implements BallInterface{
      */
     public void setYPos(double yPos) {
         this.yPos = yPos;
-    }
-
-    @Override
-    public double getXpos() {
-        return 0;
-    }
-
-    @Override
-    public double getYpos() {
-        return 0;
-    }
-
-    @Override
-    public void setXpos() {
-
-    }
-
-    @Override
-    public void setYPos() {
-
     }
 
     /**
@@ -113,7 +102,6 @@ public class Ball implements BallInterface{
         this.xSpeed += increase;
         this.ySpeed += increase;
     }
-
 
     /**
      * Create randomized ball.
@@ -151,5 +139,9 @@ public class Ball implements BallInterface{
     public void move() {
         xPos += xSpeed;
         yPos += ySpeed;
+    }
+
+    public Circle getBalls() {
+        return ballz;
     }
 }

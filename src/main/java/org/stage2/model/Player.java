@@ -1,5 +1,8 @@
 package org.stage2.model;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.shape.Rectangle;
+
 public class Player {
 
     private String name;
@@ -9,11 +12,28 @@ public class Player {
     private double yPos;
     private int score;
 
+    private double player_width;
+
+    private Rectangle paddle;
+
+    private boolean lastTouched;
+
+
+    public boolean isLastTouched() {
+        return lastTouched;
+    }
+
+    public void setLastTouched(boolean lastTouched) {
+        this.lastTouched = lastTouched;
+    }
+
     public Player() {
         this.name = "player";
         this.xPos = 0;
         this.yPos = 0;
         this.score = 0;
+        this.lastTouched = false;
+        this.paddle = new Rectangle(50, 50);
     }
 
     public Player(String name) {
@@ -23,7 +43,7 @@ public class Player {
         this.score = 0;
     }
 
-    public  Player(String name, double xPos, double yPos, int score) {
+    public Player(String name, double xPos, double yPos, int score) {
         this.name = name;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -44,6 +64,7 @@ public class Player {
 
     public void setxPos(double xPos) {
         this.xPos = xPos;
+        paddle.setX(xPos);
     }
 
     public double getyPos() {
@@ -52,6 +73,7 @@ public class Player {
 
     public void setyPos(double yPos) {
         this.yPos = yPos;
+        paddle.setY(yPos);
     }
 
     public int getScore() {
@@ -60,5 +82,17 @@ public class Player {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Rectangle getPaddle(GraphicsContext gc) {
+        gc.fillRect(xPos, yPos, player_width, player_width);
+        return paddle;
+    }
+
+    public void moveUp() {
+        this.yPos -= 15;
+    }
+    public void moveDown() {
+        this.yPos += 15;
     }
 }

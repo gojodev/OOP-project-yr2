@@ -42,13 +42,13 @@ public class Game extends Application { // Class declaration and inheritance fro
     private double ballYPos = HEIGHT / 2;
     private int scoreP1 = 0;
     private int scoreP2 = 0;
-    private boolean gameStarted;
+    private boolean gameStarted = false;
     private int playerOneXPos = 0; // Initial x-position of player one paddle
     private double playerTwoXPos = WIDTH - PLAYER_WIDTH;
-
     private double ballSpeed;
     private int scoreLimit;
     private double ballSpeedIncrease;
+    private Canvas canvas;
     private Ball ball;
 
     private Player player1;
@@ -61,11 +61,13 @@ public class Game extends Application { // Class declaration and inheritance fro
     public Game() {
         this.player1 = new Player();
         this.player2 = new Player();
+
         player1.setName("player1");
+        ;
         player2.setName("player2");
-        this.ballSpeed = 0.1;
+        this.ballSpeed = 1;
         this.scoreLimit = 3;
-        this.ballSpeedIncrease = 0.3;
+        this.ballSpeedIncrease = 0;
         this.PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
@@ -84,8 +86,9 @@ public class Game extends Application { // Class declaration and inheritance fro
     public Game(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
         this.player1 = new Player();
         this.player2 = new Player();
-        player1.setName("player1");
-        player2.setName("player2");
+
+        player1.setName(p1);
+        player2.setName(p2);
         this.ballSpeed = ballSpeed;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
@@ -103,25 +106,17 @@ public class Game extends Application { // Class declaration and inheritance fro
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+
+        ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
         PlayerListener.movePlayer(scene, player1, player2);
 
-
-        // Creates the Ball
-        ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
-
-
-        Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
+        canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
         root.getChildren().add(canvas);
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc) ) ); // Create a timeline for animation
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc))); // Create a timeline for animation
         tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
-        // Set up mouse controls
-        // canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
-
-
-        canvas.setOnMouseClicked(e -> gameStarted = true); // Start the game on mouse click
 
         // Adjust positions when window is resized
         ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
@@ -151,16 +146,41 @@ public class Game extends Application { // Class declaration and inheritance fro
             return;
         }
 
-        player1.setyPos(player1.getyPos() + 3);
-        player2.setyPos(player2.getyPos());
-
         gc.setFill(Color.BLACK); // Set the background color to black
         gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
 
         gc.setFill(Color.WHITE); // Set text color to white
-        gc.setFont(Font.font("Verdana", 25)); // Set font size and style
+        gc.setFont(Font.font("Arial", 25)); // Set font size
 
-        if (gameStarted) {
+        if (!gameStarted) {
+
+            if (scoreP1 == 0 && scoreP2 == 0) {
+                gc.fillText("CLick to Start", WIDTH / 2, HEIGHT / 2);
+//                gc.strokeText("Click to start", WIDTH / 2, HEIGHT / 2);
+                canvas.setOnMouseClicked(e -> {
+                    if (!gameStarted) {
+                        gameStarted = true;
+                    }
+                });
+
+            } else if (player1.isLastTouched()) {
+                gc.strokeText("Player 1 scored", WIDTH / 2, HEIGHT / 2);
+                canvas.setOnMouseClicked(e -> {
+                    if (!gameStarted) {
+                        gameStarted = true;
+                    }
+                });
+
+            } else if (player2.isLastTouched()) {
+                gc.strokeText("Player 2 scored", WIDTH / 2, HEIGHT / 2);
+                canvas.setOnMouseClicked(e -> {
+                    if (!gameStarted) {
+                        gameStarted = true;
+                    }
+                });
+            }
+
+        } else {
             ball.move(); // Move the ball according to its current speed
 
             // Randomize the ball's initial speed and direction
@@ -169,9 +189,6 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             ballXPos = ball.getXPos(); // Update ballXPos with the new x-position
             ballYPos = ball.getYPos(); // Update ballYPos with the new y-position
-
-            // always bet on player2
-             playerTwoYPos = ballYPos - PLAYER_HEIGHT / 2;
 
             // Ensure the ball stays within the canvas boundaries
             if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
@@ -195,69 +212,51 @@ public class Game extends Application { // Class declaration and inheritance fro
                 ball.adjustSpeed(ballSpeedIncrease);
                 System.out.println("speed change");
             }
-        } else {
+
             gc.setStroke(Color.WHITE); // Set stroke color to white
             gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
 
-            if (scoreP1 == scoreLimit) {
-                gc.strokeText("Player1 won", WIDTH / 2, HEIGHT / 2); // Display winner message
-                gc.setTextAlign(TextAlignment.CENTER);
-                System.out.println("Player1 won");
-                gameStarted = false;
-                scoreP1 = 0;
-                Runtime.getRuntime().exit(0);
-
-            } if (scoreP2 == scoreLimit) {
-                gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
-                gc.setTextAlign(TextAlignment.CENTER);
-                System.out.println("Player2 won");
-                gameStarted = false;
-                scoreP2 = 0;
-                Runtime.getRuntime().exit(0);
-
-            } else {
-                gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
-            }
-
             ballXPos = WIDTH / 2; // Reset the ball's x-position
             ballYPos = HEIGHT / 2; // Reset the ball's y-position
-        }
-
-        // Ensure the ball stays within the canvas boundaries
-        if (ballYPos > HEIGHT || ballYPos < 0) ballYSpeed *= -1;
-
-        // Ensure player paddles stay within the bounds of the game window
-        playerOneYPos = Math.max(0, Math.min(playerOneYPos, HEIGHT - PLAYER_HEIGHT));
-        playerTwoYPos = Math.max(0, Math.min(playerTwoYPos, HEIGHT - PLAYER_HEIGHT));
 
 
-        // If player one misses the ball, player two scores a point
-        if (ballXPos < playerOneXPos - PLAYER_WIDTH) {
-            scoreP2++;
-            player2.setScore(scoreP2);
-            gameStarted = false;
-            gc.strokeText("Player2 scored", WIDTH / 2, HEIGHT / 2); // Display winner message
+            // Ensure the ball stays within the canvas boundaries
+            if (ballYPos > HEIGHT || ballYPos < 0) ballYSpeed *= -1;
+
+            // Ensure player paddles stay within the bounds of the game window
+            playerOneYPos = Math.max(0, Math.min(player1.getyPos(), HEIGHT - PLAYER_HEIGHT));
+            playerTwoYPos = Math.max(0, Math.min(player2.getyPos(), HEIGHT - PLAYER_HEIGHT));
+
+
+            // If player one misses the ball, player two scores a point
+            if (ball.getXPos() < 0) {
+                scoreP2++;
+                player2.setScore(scoreP2);
+                ball.setXPos(WIDTH / 2);
+                ball.setYPos(HEIGHT / 2);
+                player2.setLastTouched(true);
+                gameStarted = false;
+            }
+
+            // If player two misses the ball, player one scores a point
+            if (ball.getXPos() > WIDTH) {
+                scoreP1++;
+                player2.setScore(scoreP1);
+                ball.setXPos(WIDTH / 2);
+                ball.setYPos(HEIGHT / 2);
+                player1.setLastTouched(true);
+                gameStarted = false;
+            }
+
+            // Draw the score
             gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
+            gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
+
+            // Draw player one and two paddles
+            gc.fillRect(player1.getxPos(), player1.getyPos(), PLAYER_WIDTH, PLAYER_HEIGHT);
+            gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
         }
-
-        // If player two misses the ball, player one scores a point
-        if (ballXPos > playerTwoXPos + PLAYER_WIDTH) {
-            scoreP1++;
-            player1.setScore(scoreP1);
-            gameStarted = false;
-            gc.strokeText("Player1 scored", WIDTH / 2, HEIGHT / 2); // Display winner message
-            gc.setTextAlign(TextAlignment.CENTER);
-        }
-
-
-        // Draw the score
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
-        gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
-
-        // Draw player one and two paddles
-        gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
-        gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
     }
 
 
