@@ -5,7 +5,7 @@ public class Player {
     private String name;
     private double xPos;
 
-    private double size;
+
     private double yPos;
     private int score;
 

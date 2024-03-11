@@ -1,7 +1,7 @@
 package org.stage2.view;
 
 public class GameView {
-    public void printGameDetails(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
+    public static void printGameDetails(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
         System.out.println("p1 : " + p1);
         System.out.println("p2 : " + p2);
         System.out.println("scoreLimit : " + scoreLimit);

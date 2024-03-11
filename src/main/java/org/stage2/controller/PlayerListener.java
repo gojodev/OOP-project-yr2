@@ -6,7 +6,7 @@ import org.stage2.model.Player;
 
 public class PlayerListener {
 
-    public void movePlayer(Scene scene, Player p1, Player p2) {
+    public static void movePlayer(Scene scene, Player p1, Player p2) {
 
         int direction = 10;
 

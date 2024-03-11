@@ -63,9 +63,9 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.player2 = new Player();
         player1.setName("player1");
         player2.setName("player2");
-        this.ballSpeed = 0.5;
+        this.ballSpeed = 0.1;
         this.scoreLimit = 3;
-        this.ballSpeedIncrease = 0.5;
+        this.ballSpeedIncrease = 0.3;
         this.PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
@@ -103,21 +103,23 @@ public class Game extends Application { // Class declaration and inheritance fro
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+        PlayerListener.movePlayer(scene, player1, player2);
+
 
         // Creates the Ball
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
+
 
         Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
         root.getChildren().add(canvas);
 
-        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc))); // Create a timeline for animation
+        Timeline tl = new Timeline(new KeyFrame(Duration.millis(10), e -> run(gc) ) ); // Create a timeline for animation
         tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
         // Set up mouse controls
         // canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
-        PlayerListener listener = new PlayerListener();
-        listener.movePlayer(scene, player1, player2);
+
 
         canvas.setOnMouseClicked(e -> gameStarted = true); // Start the game on mouse click
 
@@ -148,6 +150,9 @@ public class Game extends Application { // Class declaration and inheritance fro
             System.out.println("Error Game window dimensions are invalid. Please resize the window.");
             return;
         }
+
+        player1.setyPos(player1.getyPos() + 3);
+        player2.setyPos(player2.getyPos());
 
         gc.setFill(Color.BLACK); // Set the background color to black
         gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
@@ -231,6 +236,8 @@ public class Game extends Application { // Class declaration and inheritance fro
             scoreP2++;
             player2.setScore(scoreP2);
             gameStarted = false;
+            gc.strokeText("Player2 scored", WIDTH / 2, HEIGHT / 2); // Display winner message
+            gc.setTextAlign(TextAlignment.CENTER);
         }
 
         // If player two misses the ball, player one scores a point
@@ -238,6 +245,8 @@ public class Game extends Application { // Class declaration and inheritance fro
             scoreP1++;
             player1.setScore(scoreP1);
             gameStarted = false;
+            gc.strokeText("Player1 scored", WIDTH / 2, HEIGHT / 2); // Display winner message
+            gc.setTextAlign(TextAlignment.CENTER);
         }
 
 
