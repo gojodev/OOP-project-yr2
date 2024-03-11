@@ -16,7 +16,14 @@ public class Player {
         this.score = 0;
     }
 
-    public Player(String name, double xPos, double yPos, double size, int score) {
+    public Player(String name) {
+        this.name = name;
+        this.xPos = 0;
+        this.yPos = 0;
+        this.score = 0;
+    }
+
+    public  Player(String name, double xPos, double yPos, int score) {
         this.name = name;
         this.xPos = xPos;
         this.yPos = yPos;

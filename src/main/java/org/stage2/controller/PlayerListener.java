@@ -1,32 +1,36 @@
 package org.stage2.controller;
 
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import org.stage2.model.Player;
 
 public class PlayerListener {
 
-    private Player p1;
-    private Player p2;
+    public void movePlayer(Scene scene, Player p1, Player p2) {
 
-    public void movePlayer(Scene scene) {
+        int direction = 10;
+
+        double p1Pos = p1.getyPos();
+        double p2Pos = p2.getyPos();
         scene.setOnKeyPressed(keyEvent -> {
-            switch (keyEvent.getCode()) {
-                case W:
-                    PlayerController.moveUp(p1, 5);
-                    break;
+            if (keyEvent.getCode() == KeyCode.W) {
+                PlayerController.move(p1, direction, p1Pos);
+                System.out.println("p1 up");
+            }
 
-                case S:
-                    PlayerController.moveDown(p1, -5);
-                    break;
+            if (keyEvent.getCode() == KeyCode.S) {
+                PlayerController.move(p1, -direction, p1Pos);
+                System.out.println("p1 Down");
+            }
 
-                //p2 will be copy be controlled by the computer
-                case UP:
-                    PlayerController.moveUp(p2, 5);
-                    break;
+            if (keyEvent.getCode() == KeyCode.UP) {
+                PlayerController.move(p2, direction, p2Pos);
+                System.out.println("p2 up");
+            }
 
-                case DOWN:
-                    PlayerController.moveDown(p2, -5);
-                    break;
+            if (keyEvent.getCode() == KeyCode.DOWN) {
+                PlayerController.move(p2, -direction, p2Pos);
+                System.out.println("p2 Down");
             }
         });
     }

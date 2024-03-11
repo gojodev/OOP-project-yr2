@@ -16,6 +16,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.stage2.controller.PlayerController;
+import org.stage2.controller.PlayerListener;
 import org.stage2.model.Ball;
 import org.stage2.model.Player;
 
@@ -58,7 +59,9 @@ public class Game extends Application { // Class declaration and inheritance fro
      * Instantiates a new Game.
      */
     public Game() {
-        player1.setName("player1");;
+        this.player1 = new Player();
+        this.player2 = new Player();
+        player1.setName("player1");
         player2.setName("player2");
         this.ballSpeed = 0.5;
         this.scoreLimit = 3;
@@ -79,8 +82,10 @@ public class Game extends Application { // Class declaration and inheritance fro
      * @param racketSize        the racket size
      */
     public Game(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
-        player1.setName(p1);
-        player2.setName(p2);
+        this.player1 = new Player();
+        this.player2 = new Player();
+        player1.setName("player1");
+        player2.setName("player2");
         this.ballSpeed = ballSpeed;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
@@ -99,6 +104,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
 
+        // Creates the Ball
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
 
         Canvas canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
@@ -110,8 +116,9 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         // Set up mouse controls
         // canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
-        PlayerController.moveUp(player1, 5);
-        PlayerController.moveDown(player1, -5);
+        PlayerListener listener = new PlayerListener();
+        listener.movePlayer(scene, player1, player2);
+
         canvas.setOnMouseClicked(e -> gameStarted = true); // Start the game on mouse click
 
         // Adjust positions when window is resized
@@ -146,7 +153,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
 
         gc.setFill(Color.WHITE); // Set text color to white
-        gc.setFont(Font.font("Arial", 25)); // Set font size
+        gc.setFont(Font.font("Verdana", 25)); // Set font size and style
 
         if (gameStarted) {
             ball.move(); // Move the ball according to its current speed
@@ -189,11 +196,19 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             if (scoreP1 == scoreLimit) {
                 gc.strokeText("Player1 won", WIDTH / 2, HEIGHT / 2); // Display winner message
+                gc.setTextAlign(TextAlignment.CENTER);
                 System.out.println("Player1 won");
+                gameStarted = false;
+                scoreP1 = 0;
+                Runtime.getRuntime().exit(0);
 
             } if (scoreP2 == scoreLimit) {
                 gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
+                gc.setTextAlign(TextAlignment.CENTER);
                 System.out.println("Player2 won");
+                gameStarted = false;
+                scoreP2 = 0;
+                Runtime.getRuntime().exit(0);
 
             } else {
                 gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
@@ -221,7 +236,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         // If player two misses the ball, player one scores a point
         if (ballXPos > playerTwoXPos + PLAYER_WIDTH) {
             scoreP1++;
-            player2.setScore(scoreP1);
+            player1.setScore(scoreP1);
             gameStarted = false;
         }
 
@@ -230,9 +245,6 @@ public class Game extends Application { // Class declaration and inheritance fro
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
         gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
-
-        // Access the root pane of the existing scene
-        Pane root = (Pane) gc.getCanvas().getScene().getRoot();
 
         // Draw player one and two paddles
         gc.fillRect(playerOneXPos, playerOneYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
