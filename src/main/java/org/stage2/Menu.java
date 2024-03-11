@@ -1,4 +1,4 @@
-package org.example.stage1;
+package org.stage2;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -95,7 +95,6 @@ public class Menu extends Application {
 
         // Instantiate and start the game with selected settings
          Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeed, ballSpeedIncrease, racketSize);
-//        Game game = new Game();
         game.start(primaryStage);
     }
 

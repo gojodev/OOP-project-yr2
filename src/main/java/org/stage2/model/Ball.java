@@ -1,12 +1,12 @@
 // Ball.java
-package org.example.stage1;
+package org.stage2.model;
 
 import java.util.Random;
 
 /**
  * The type Ball.
  */
-public class Ball {
+public class Ball implements BallInterface{
     private double xPos;
     private double yPos;
     private double xSpeed = 1;
@@ -62,6 +62,26 @@ public class Ball {
      */
     public void setYPos(double yPos) {
         this.yPos = yPos;
+    }
+
+    @Override
+    public double getXpos() {
+        return 0;
+    }
+
+    @Override
+    public double getYpos() {
+        return 0;
+    }
+
+    @Override
+    public void setXpos() {
+
+    }
+
+    @Override
+    public void setYPos() {
+
     }
 
     /**
@@ -132,5 +152,4 @@ public class Ball {
         xPos += xSpeed;
         yPos += ySpeed;
     }
-
 }

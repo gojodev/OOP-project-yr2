@@ -1,23 +1,25 @@
-package org.example.stage1; // Package declaration, grouping related classes
+package org.stage2; // Package declaration, grouping related classes
 
-import java.util.Random; // Importing the Random class from java.util package
-
-import javafx.animation.KeyFrame; // Importing KeyFrame class from javafx.animation package
-import javafx.animation.Timeline; // Importing Timeline class from javafx.animation package
-import javafx.application.Application; // Importing Application class from javafx.application package
-import javafx.scene.Scene; // Importing Scene class from javafx.scene package
-import javafx.scene.canvas.Canvas; // Importing Canvas class from javafx.scene.canvas package
-import javafx.scene.canvas.GraphicsContext; // Importing GraphicsContext class from javafx.scene.canvas package
-import javafx.scene.paint.Color; // Importing Color class from javafx.scene.paint package
-import javafx.scene.text.Font; // Importing Font class from javafx.scene.text package
-import javafx.scene.text.TextAlignment; // Importing TextAlignment enum from javafx.scene.text package
-import javafx.stage.Stage; // Importing Stage class from javafx.stage package
-import javafx.util.Duration; // Importing Duration class from javafx.util package
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.stage2.controller.PlayerController;
+import org.stage2.model.Ball;
+import org.stage2.model.Player;
+
+import java.util.Random;
 
 
 /**
@@ -43,20 +45,21 @@ public class Game extends Application { // Class declaration and inheritance fro
     private int playerOneXPos = 0; // Initial x-position of player one paddle
     private double playerTwoXPos = WIDTH - PLAYER_WIDTH;
 
-    private String p1;
-    private String p2;
     private double ballSpeed;
     private int scoreLimit;
     private double ballSpeedIncrease;
     private Ball ball;
+
+    private Player player1;
+    private Player player2;
 
 
     /**
      * Instantiates a new Game.
      */
     public Game() {
-        this.p1 = "player1";
-        this.p2 = "player2";
+        player1.setName("player1");;
+        player2.setName("player2");
         this.ballSpeed = 0.5;
         this.scoreLimit = 3;
         this.ballSpeedIncrease = 0.5;
@@ -76,8 +79,8 @@ public class Game extends Application { // Class declaration and inheritance fro
      * @param racketSize        the racket size
      */
     public Game(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
-        this.p1 = p1;
-        this.p2 = p2;
+        player1.setName(p1);
+        player2.setName(p2);
         this.ballSpeed = ballSpeed;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
@@ -106,7 +109,9 @@ public class Game extends Application { // Class declaration and inheritance fro
         tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
         // Set up mouse controls
-        canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
+        // canvas.setOnMouseMoved(e -> playerOneYPos = e.getY()); // Update player one's paddle position on mouse movement
+        PlayerController.moveUp(player1, 5);
+        PlayerController.moveDown(player1, -5);
         canvas.setOnMouseClicked(e -> gameStarted = true); // Start the game on mouse click
 
         // Adjust positions when window is resized
@@ -184,12 +189,12 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             if (scoreP1 == scoreLimit) {
                 gc.strokeText("Player1 won", WIDTH / 2, HEIGHT / 2); // Display winner message
-                Platform.exit(); // Close the game window
                 System.out.println("Player1 won");
+
             } if (scoreP2 == scoreLimit) {
                 gc.strokeText("Player2 won", WIDTH / 2, HEIGHT / 2); // Display winner message
-                Platform.exit(); // Close the game window
                 System.out.println("Player2 won");
+
             } else {
                 gc.strokeText("Click", WIDTH / 2, HEIGHT / 2); // Display click instruction
             }
@@ -209,20 +214,22 @@ public class Game extends Application { // Class declaration and inheritance fro
         // If player one misses the ball, player two scores a point
         if (ballXPos < playerOneXPos - PLAYER_WIDTH) {
             scoreP2++;
+            player2.setScore(scoreP2);
             gameStarted = false;
         }
 
         // If player two misses the ball, player one scores a point
         if (ballXPos > playerTwoXPos + PLAYER_WIDTH) {
             scoreP1++;
+            player2.setScore(scoreP1);
             gameStarted = false;
         }
 
 
         // Draw the score
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(p1 + ": " + scoreP1, WIDTH / 4, 50);
-        gc.fillText(p2 + ": " + scoreP2, WIDTH * 3 / 4, 50);
+        gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
+        gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
 
         // Access the root pane of the existing scene
         Pane root = (Pane) gc.getCanvas().getScene().getRoot();
