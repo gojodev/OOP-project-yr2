@@ -1,7 +1,6 @@
 package org.stage2.controller;
 
 import org.stage2.model.Player;
-import org.stage2.view.PlayerView;
 
 public class PlayerController {
     private Player model;

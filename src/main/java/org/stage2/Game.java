@@ -19,6 +19,7 @@ import org.stage2.controller.PlayerController;
 import org.stage2.controller.PlayerListener;
 import org.stage2.model.Ball;
 import org.stage2.model.Player;
+import org.stage2.view.View;
 
 import java.util.Random;
 
@@ -53,6 +54,8 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private Player player1;
     private Player player2;
+
+    private View view;
 
 
     /**
@@ -109,6 +112,7 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
         PlayerListener.movePlayer(scene, player1, player2);
+        view = new View(ball, player1, player2);
 
         canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
@@ -156,7 +160,7 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             if (scoreP1 == 0 && scoreP2 == 0) {
                 gc.fillText("CLick to Start", WIDTH / 2, HEIGHT / 2);
-//                gc.strokeText("Click to start", WIDTH / 2, HEIGHT / 2);
+                gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
                     if (!gameStarted) {
                         gameStarted = true;
@@ -195,7 +199,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                 ball.reverseYSpeed(); // Reverse the ball's y-speed
             }
 
-            gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R); // Draw the ball
+            view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
 
             // Check collision with player one paddle
             if (ballXPos <= playerOneXPos + PLAYER_WIDTH && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT) {
@@ -248,14 +252,10 @@ public class Game extends Application { // Class declaration and inheritance fro
                 gameStarted = false;
             }
 
-            // Draw the score
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
-            gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
+            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
 
-            // Draw player one and two paddles
-            gc.fillRect(player1.getxPos(), player1.getyPos(), PLAYER_WIDTH, PLAYER_HEIGHT);
-            gc.fillRect(playerTwoXPos, playerTwoYPos, PLAYER_WIDTH, PLAYER_HEIGHT);
+            view.DrawRackets(gc, PLAYER_WIDTH, PLAYER_HEIGHT, playerTwoXPos, playerTwoYPos);
+
         }
     }
 
