@@ -30,8 +30,8 @@ import java.util.Random;
 public class Game extends Application { // Class declaration and inheritance from Application class
 
     // Variables declaration
-    private double WIDTH = 450;
-    private double HEIGHT = 450;
+    private double WIDTH = 500;
+    private double HEIGHT = 500;
     private double PLAYER_HEIGHT = 100;
     private float PLAYER_WIDTH;
     private double BALL_R = 15;

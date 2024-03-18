@@ -33,5 +33,4 @@ public class View {
     public void DrawBall(GraphicsContext gc, double ballXPos, double ballYPos, double BALL_R) {
         gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R); // Draw the ball
     }
-
 }
