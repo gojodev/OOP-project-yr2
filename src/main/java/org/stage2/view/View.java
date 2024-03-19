@@ -72,6 +72,7 @@ public class View {
      */
     public void DrawScore(GraphicsContext gc, int scoreP1, int scoreP2, double WIDTH) {
         gc.setTextAlign(TextAlignment.CENTER);
+        gc.setFill(Color.WHITE);
         gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
         gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
     }

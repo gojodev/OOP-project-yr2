@@ -248,7 +248,21 @@ public class Game extends Application { // Class declaration and inheritance fro
                 ball.reverseYSpeed(); // Reverse the ball's y-speed
             }
 
-            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
+
+            if (PlayerController.isRestarted) {
+                Canvas canvas = new Canvas(Game.WIDTH, Game.HEIGHT); // Create a canvas with specified dimensions
+                GraphicsContext gcNew = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
+
+                view = new View(ball, player1, player2);
+                view.DrawScore(gcNew, 0, 0, WIDTH);
+
+                PlayerController.isRestarted = false;
+                System.out.println("Restarted Game");
+            }
+            else {
+                System.out.println("Game first starting");
+
+            }
 
             view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
 
