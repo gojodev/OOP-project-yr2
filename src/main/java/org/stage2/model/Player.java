@@ -3,6 +3,9 @@ package org.stage2.model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * The type Player.
+ */
 public class Player {
 
     private String name;
@@ -18,15 +21,30 @@ public class Player {
 
     private boolean lastTouched;
 
+    public static int moveSpeed = 15;
 
+
+    /**
+     * Is last touched boolean.
+     *
+     * @return the boolean
+     */
     public boolean isLastTouched() {
         return lastTouched;
     }
 
+    /**
+     * Sets last touched.
+     *
+     * @param lastTouched the last touched
+     */
     public void setLastTouched(boolean lastTouched) {
         this.lastTouched = lastTouched;
     }
 
+    /**
+     * Instantiates a new Player.
+     */
     public Player() {
         this.name = "player";
         this.xPos = 0;
@@ -36,6 +54,11 @@ public class Player {
         this.paddle = new Rectangle(50, 50);
     }
 
+    /**
+     * Instantiates a new Player.
+     *
+     * @param name the name
+     */
     public Player(String name) {
         this.name = name;
         this.xPos = 0;
@@ -43,6 +66,14 @@ public class Player {
         this.score = 0;
     }
 
+    /**
+     * Instantiates a new Player.
+     *
+     * @param name  the name
+     * @param xPos  the x pos
+     * @param yPos  the y pos
+     * @param score the score
+     */
     public Player(String name, double xPos, double yPos, int score) {
         this.name = name;
         this.xPos = xPos;
@@ -50,49 +81,102 @@ public class Player {
         this.score = score;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Gets pos.
+     *
+     * @return the pos
+     */
     public double getxPos() {
         return xPos;
     }
 
+    /**
+     * Sets pos.
+     *
+     * @param xPos the x pos
+     */
     public void setxPos(double xPos) {
         this.xPos = xPos;
         paddle.setX(xPos);
     }
 
+    /**
+     * Gets pos.
+     *
+     * @return the pos
+     */
     public double getyPos() {
         return yPos;
     }
 
+    /**
+     * Sets pos.
+     *
+     * @param yPos the y pos
+     */
     public void setyPos(double yPos) {
         this.yPos = yPos;
         paddle.setY(yPos);
     }
 
+    /**
+     * Gets score.
+     *
+     * @return the score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets score.
+     *
+     * @param score the score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Gets paddle.
+     *
+     * @param gc the gc
+     * @return the paddle
+     */
     public Rectangle getPaddle(GraphicsContext gc) {
         gc.fillRect(xPos, yPos, player_width, player_width);
         return paddle;
     }
 
+    /**
+     * Move up.
+     */
     public void moveUp() {
-        this.yPos -= 15;
+        this.yPos -= moveSpeed;
     }
+
+    /**
+     * Move down.
+     */
     public void moveDown() {
-        this.yPos += 15;
+        this.yPos += moveSpeed;
     }
 }

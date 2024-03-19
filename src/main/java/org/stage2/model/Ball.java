@@ -91,6 +91,25 @@ public class Ball  {
         this.ySpeed = ySpeed;
     }
 
+
+    /**
+     * Gets speed.
+     *
+     * @return the speed
+     */
+    public double getxSpeed() {
+        return this.xSpeed;
+    }
+
+    /**
+     * Gets speed.
+     *
+     * @return the speed
+     */
+    public double getySpeed() {
+        return this.ySpeed;
+    }
+
     /**
      * Adjust speed.
      *
@@ -112,8 +131,8 @@ public class Ball  {
      */
     public static Ball createRandomizedBall(double xPos, double yPos) {
         Random random = new Random();
-        double xSpeed = random.nextInt(3) == 0 ? 1 : -1;
-        double ySpeed = random.nextInt(3) == 0 ? 1 : -1;
+        double xSpeed = random.nextInt(2) == 0 ? 1 : -1;
+        double ySpeed = random.nextInt(2) == 0 ? 1 : -1;
         return new Ball(xPos, yPos, xSpeed, ySpeed);
     }
 
@@ -141,6 +160,11 @@ public class Ball  {
         yPos += ySpeed;
     }
 
+    /**
+     * Gets balls.
+     *
+     * @return the balls
+     */
     public Circle getBalls() {
         return ballz;
     }

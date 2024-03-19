@@ -104,7 +104,6 @@ public class Menu extends Application {
      *
      * @param args the input arguments
      */
-// Test the Menu class
     public static void main(String[] args) {
         launch(args);
     }
