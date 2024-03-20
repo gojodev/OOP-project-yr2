@@ -1,8 +1,6 @@
 // Ball.java
-package org.stage2.model;
+package org.stage3.model;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Circle;
 
 import java.util.Random;

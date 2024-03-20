@@ -1,10 +1,12 @@
-package org.stage2.controller;
+package org.stage3.controller;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import org.stage2.Game;
-import org.stage2.model.Ball;
-import org.stage2.model.Player;
+import org.stage3.Game;
+import org.stage3.model.Ball;
+import org.stage3.model.Player;
+
+import java.util.Random;
 
 /**
  * The type Player controller.
@@ -61,9 +63,6 @@ public class PlayerController {
 
             // Restart the game
             if (keyEvent.getCode() == KeyCode.R) {
-                ball.setXPos(centerX);
-                ball.setXPos(centerY);
-
                 p1.setxPos(0);
                 p1.setyPos(centerY);
 
@@ -72,6 +71,15 @@ public class PlayerController {
 
                 p1.setScore(0);
                 p2.setScore(0);
+
+                ball.move();
+                // Randomize the ball's initial speed and direction
+                Game.ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+                Game.ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+
+                ball.setXPos(centerX);
+                ball.setXPos(centerY);
+
                 isRestarted = true;
             } else {
                 PlayerController.isRestarted = false;

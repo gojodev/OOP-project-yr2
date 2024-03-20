@@ -1,4 +1,4 @@
-package org.stage2.model;
+package org.stage3.model;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Rectangle;
@@ -21,6 +21,9 @@ public class Player {
 
     private boolean lastTouched;
 
+    /**
+     * The constant moveSpeed.
+     */
     public static int moveSpeed = 15;
 
 

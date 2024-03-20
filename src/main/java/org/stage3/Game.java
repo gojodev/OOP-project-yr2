@@ -1,4 +1,4 @@
-package org.stage2; // Package declaration, grouping related classes
+package org.stage3; // Package declaration, grouping related classes
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,10 +14,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.stage2.controller.PlayerController;
-import org.stage2.model.Ball;
-import org.stage2.model.Player;
-import org.stage2.view.View;
+import org.stage3.controller.PlayerController;
+import org.stage3.model.Ball;
+import org.stage3.model.Player;
+import org.stage3.view.View;
 
 import java.io.FileWriter;
 import java.util.Random;
@@ -32,22 +32,67 @@ import java.util.Scanner; // Import the Scanner class to read text files
  */
 public class Game extends Application { // Class declaration and inheritance from Application class
 
-    // Variables declaration
+    /**
+     * The constant WIDTH.
+     */
+// Variables declaration
     public static double WIDTH = 550;
+    /**
+     * The constant HEIGHT.
+     */
     public static double HEIGHT = 550;
+    /**
+     * The constant PLAYER_HEIGHT.
+     */
     public static double PLAYER_HEIGHT = 100;
+    /**
+     * The constant PLAYER_WIDTH.
+     */
     public static float PLAYER_WIDTH;
     private double BALL_R = 15;
+    /**
+     * The constant ballYSpeed.
+     */
     public static double ballYSpeed = 1;
+    /**
+     * The constant ballXSpeed.
+     */
     public static double ballXSpeed = 1;
+    /**
+     * The constant playerOneYPos.
+     */
     public static double playerOneYPos = HEIGHT / 2;
+    /**
+     * The constant playerTwoYPos.
+     */
     public static double playerTwoYPos = HEIGHT / 2;
+    /**
+     * The constant ballXPos.
+     */
     public static double ballXPos = WIDTH / 2;
+    /**
+     * The constant ballYPos.
+     */
     public static double ballYPos = HEIGHT / 2;
+    /**
+     * The constant scoreP1.
+     */
     public static int scoreP1 = 0;
+    /**
+     * The constant scoreP2.
+     */
     public static int scoreP2 = 0;
+    /**
+     * The constant gameStarted.
+     */
     public static boolean gameStarted = false;
+    /**
+     * The constant playerOneXPos.
+     */
     public static double playerOneXPos =  PLAYER_WIDTH;
+    /**
+     * The constant playerTwoXPos.
+     */
     public static double playerTwoXPos = WIDTH - PLAYER_WIDTH;
     private double ballSpeed;
     private int scoreLimit;
@@ -70,10 +115,16 @@ public class Game extends Application { // Class declaration and inheritance fro
      */
     public static Scene scene;
 
+    /**
+     * The constant isPaused.
+     */
     public static boolean isPaused = false;
 
     private boolean won = false;
 
+    /**
+     * The constant modifiedSettings.
+     */
     public static boolean modifiedSettings = false;
 
     /**
@@ -91,6 +142,11 @@ public class Game extends Application { // Class declaration and inheritance fro
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
+    /**
+     * Load settings.
+     *
+     * @throws FileNotFoundException the file not found exception
+     */
     public void LoadSettings() throws FileNotFoundException {
         String fileName = "settings.txt";
         try {
@@ -237,6 +293,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                     won = true;
                 } else {
                     message = "Player1 scored";
+                    ballSpeed = 1;
                 }
                 gc.strokeText(message, WIDTH / 2, HEIGHT / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
@@ -255,6 +312,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                     won = true;
                 } else {
                     message = "Player2 scored";
+                    ballSpeed = 1;
                 }
 
                 gc.strokeText(message, WIDTH / 2, HEIGHT / 2);

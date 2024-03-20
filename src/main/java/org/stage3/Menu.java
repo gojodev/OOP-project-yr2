@@ -1,4 +1,4 @@
-package org.stage2;
+package org.stage3;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;

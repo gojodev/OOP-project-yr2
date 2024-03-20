@@ -1,9 +1,9 @@
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import org.stage2.Game;
-import org.stage2.model.Ball;
-import org.stage2.model.Player;
-import org.junit.jupiter.api.Test;
+import org.stage3.Game;
+import org.stage3.model.Ball;
+import org.stage3.model.Player;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**

@@ -1,24 +1,11 @@
-package org.stage2.view;
+package org.stage3.view;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Bounds;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import org.stage2.Game;
-import org.stage2.controller.PlayerController;
-import org.stage2.model.Ball;
-import org.stage2.model.Player;
-
-import java.util.Random;
+import org.stage3.controller.PlayerController;
+import org.stage3.model.Ball;
+import org.stage3.model.Player;
 
 /**
  * The type View.
