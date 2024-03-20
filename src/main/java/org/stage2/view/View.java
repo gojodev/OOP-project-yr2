@@ -50,7 +50,7 @@ public class View {
     /**
      * Draw rackets.
      *
-     * @param gc            the GraphicsContext
+     * @param gc            the gc
      * @param PLAYER_WIDTH  the player width
      * @param PLAYER_HEIGHT the player height
      * @param playerTwoXPos the player two x pos
@@ -65,7 +65,7 @@ public class View {
     /**
      * Draw score.
      *
-     * @param gc      the GraphicsContext
+     * @param gc      the gc
      * @param scoreP1 the score p 1
      * @param scoreP2 the score p 2
      * @param WIDTH   the width
@@ -81,10 +81,11 @@ public class View {
         gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
     }
 
+
     /**
      * Draw ball.
      *
-     * @param gc       the GraphicsContext
+     * @param gc       the gc
      * @param ballXPos the ball x pos
      * @param ballYPos the ball y pos
      * @param BALL_R   the ball r

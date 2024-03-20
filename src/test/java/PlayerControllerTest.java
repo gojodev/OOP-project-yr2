@@ -1,15 +1,15 @@
-package org.stage2.controller;
-
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import org.stage2.Game;
 import org.stage2.model.Ball;
 import org.stage2.model.Player;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The type Player controller.
  */
-public class PlayerController {
+public class PlayerControllerTest {
 
     /**
      * The constant isRestarted.
@@ -74,7 +74,7 @@ public class PlayerController {
                 p2.setScore(0);
                 isRestarted = true;
             } else {
-                PlayerController.isRestarted = false;
+                PlayerControllerTest.isRestarted = false;
             }
         });
     }
@@ -94,6 +94,7 @@ public class PlayerController {
      * @param ball              the ball
      * @param BALL_R            the ball r
      */
+
     public static void PaddleCollision(double ballXPos, double ballYPos, double playerOneXPos, double playerOneYPos,
                                        double playerTwoXPos, double playerTwoYPos, double ballSpeedIncrease,
                                        double PLAYER_WIDTH, double PLAYER_HEIGHT, Ball ball, double BALL_R) {

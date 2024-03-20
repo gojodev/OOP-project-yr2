@@ -19,7 +19,12 @@ import org.stage2.model.Ball;
 import org.stage2.model.Player;
 import org.stage2.view.View;
 
+import java.io.FileWriter;
 import java.util.Random;
+
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.Scanner; // Import the Scanner class to read text files
 
 
 /**
@@ -30,20 +35,20 @@ public class Game extends Application { // Class declaration and inheritance fro
     // Variables declaration
     public static double WIDTH = 500;
     public static double HEIGHT = 500;
-    private double PLAYER_HEIGHT = 100;
-    private float PLAYER_WIDTH;
+    public static double PLAYER_HEIGHT = 100;
+    public static float PLAYER_WIDTH;
     private double BALL_R = 15;
-    private double ballYSpeed = 1;
-    private double ballXSpeed = 1;
-    private double playerOneYPos = HEIGHT / 2;
-    private double playerTwoYPos = HEIGHT / 2;
-    private double ballXPos = WIDTH / 2;
-    private double ballYPos = HEIGHT / 2;
-    private int scoreP1 = 0;
-    private int scoreP2 = 0;
-    private boolean gameStarted = false;
-    private int playerOneXPos = 0; // Initial x-position of player one paddle
-    private double playerTwoXPos = WIDTH - PLAYER_WIDTH;
+    public static double ballYSpeed = 1;
+    public static double ballXSpeed = 1;
+    public static double playerOneYPos = HEIGHT / 2;
+    public static double playerTwoYPos = HEIGHT / 2;
+    public static double ballXPos = WIDTH / 2;
+    public static double ballYPos = HEIGHT / 2;
+    public static int scoreP1 = 0;
+    public static int scoreP2 = 0;
+    public static boolean gameStarted = false;
+    public static int playerOneXPos = 0; // Initial x-position of player one paddle
+    public static double playerTwoXPos = WIDTH - PLAYER_WIDTH;
     private double ballSpeed;
     private int scoreLimit;
     private double ballSpeedIncrease;
@@ -86,6 +91,31 @@ public class Game extends Application { // Class declaration and inheritance fro
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
+    public void LoadSettings() throws FileNotFoundException {
+        String fileName = "settings.txt";
+        try {
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(player1.getName());
+            writer.write("\n" + player2.getName());
+            writer.write("\n" + (int) ballSpeed);
+            writer.write("\n" + (int) ballSpeedIncrease);
+            writer.write("\n" + scoreLimit);
+            writer.write("\n" + (int) PLAYER_WIDTH);
+            writer.close();
+            System.out.println("written to file");
+
+            File settingsObj = new File(fileName);
+            Scanner reader = new Scanner(settingsObj);
+            while (reader.hasNextLine()) {
+                String data = reader.nextLine();
+                System.out.println(data);
+            }
+            reader.close();
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Instantiates a new Game.
@@ -116,7 +146,8 @@ public class Game extends Application { // Class declaration and inheritance fro
     }
 
     // Application entry point
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws FileNotFoundException {
+        LoadSettings();
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         scene = new Scene(root, WIDTH, HEIGHT);
@@ -207,9 +238,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                         System.exit(0);
                     }
                 });
-            }
-
-            else if (player2.isLastTouched()) {
+            } else if (player2.isLastTouched()) {
                 if (player2.getScore() == scoreLimit) {
                     message = "Player2 won";
                     won = true;
@@ -238,7 +267,7 @@ public class Game extends Application { // Class declaration and inheritance fro
             ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
             ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
 
-            ballXPos = ball.getXPos(); // Update ballXPos with the new x-position
+            ballXPos = ball.getXPos(); // Update ballXPos   with the new x-position
             ballYPos = ball.getYPos(); // Update ballYPos with the new y-position
 
             PlayerController.controls(scene, player1, player2, ball);
@@ -252,54 +281,12 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
 
-            // Check collision with player one paddle
-            if (ballXPos <= playerOneXPos + PLAYER_WIDTH && ballYPos >= playerOneYPos && ballYPos <= playerOneYPos + PLAYER_HEIGHT) {
-                ball.reverseXSpeed();
-                ball.reverseYSpeed();
-                ball.adjustSpeed(ballSpeedIncrease);
-            }
-
-            // Check collision with player two paddle
-            if (ballXPos + BALL_R >= playerTwoXPos && ballYPos >= playerTwoYPos && ballYPos <= playerTwoYPos + PLAYER_HEIGHT) {
-                ball.reverseXSpeed();
-                ball.reverseYSpeed();
-                ball.adjustSpeed(ballSpeedIncrease);
-            }
+            PlayerController.PaddleCollision(ballXPos, ballYPos, playerOneXPos, playerOneYPos, playerTwoXPos, playerTwoYPos, ballSpeedIncrease, PLAYER_WIDTH, PLAYER_HEIGHT, ball, BALL_R);
 
             gc.setStroke(Color.WHITE); // Set stroke color to white
             gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
 
-            ballXPos = WIDTH / 2; // Reset the ball's x-position
-            ballYPos = HEIGHT / 2; // Reset the ball's y-position
-
-
-            // Ensure the ball stays within the canvas boundaries
-            if (ballYPos > HEIGHT || ballYPos < 0) ballYSpeed *= -1;
-
-            // Ensure player paddles stay within the bounds of the game window
-            playerOneYPos = Math.max(0, Math.min(player1.getyPos(), HEIGHT - PLAYER_HEIGHT));
-            playerTwoYPos = Math.max(0, Math.min(player2.getyPos(), HEIGHT - PLAYER_HEIGHT));
-
-
-            // If player one misses the ball, player two scores a point
-            if (ball.getXPos() < 0) {
-                scoreP2++;
-                player2.setScore(scoreP2);
-                ball.setXPos(WIDTH / 2);
-                ball.setYPos(HEIGHT / 2);
-                player2.setLastTouched(true);
-                gameStarted = false;
-            }
-
-            // If player two misses the ball, player one scores a point
-            if (ball.getXPos() > WIDTH) {
-                scoreP1++;
-                player1.setScore(scoreP1);
-                ball.setXPos(WIDTH / 2);
-                ball.setYPos(HEIGHT / 2);
-                player1.setLastTouched(true);
-                gameStarted = false;
-            }
+            PlayerController.BallBoundsLogic(ball, player1, player2);
 
             view.DrawRackets(gc, PLAYER_WIDTH, PLAYER_HEIGHT, playerTwoXPos, playerTwoYPos);
 
