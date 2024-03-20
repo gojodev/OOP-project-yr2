@@ -73,10 +73,10 @@ public class PlayerController {
                 p1.setScore(0);
                 p2.setScore(0);
                 isRestarted = true;
+            }
 
-//                Canvas canvas = new Canvas(Game.WIDTH, Game.HEIGHT); // Create a canvas with specified dimensions
-//                GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
-//                View view = new View(ball, p1, p2);
+            else {
+                PlayerController.isRestarted = false;
             }
         });
     }

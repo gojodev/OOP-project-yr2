@@ -73,6 +73,10 @@ public class View {
     public void DrawScore(GraphicsContext gc, int scoreP1, int scoreP2, double WIDTH) {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setFill(Color.WHITE);
+        if (PlayerController.isRestarted) {
+            scoreP1 = 0;
+            scoreP2 = 0;
+        }
         gc.fillText(player1.getName() + ": " + scoreP1, WIDTH / 4, 50);
         gc.fillText(player2.getName() + ": " + scoreP2, WIDTH * 3 / 4, 50);
     }
@@ -90,5 +94,5 @@ public class View {
         gc.fillOval(ballXPos, ballYPos, BALL_R, BALL_R);
     }
 
-     // The pause and restart game functionality are in PlayerController
+    // The pause and restart game functionality are in PlayerController
 }

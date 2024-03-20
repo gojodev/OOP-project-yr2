@@ -245,24 +245,10 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             // Ensure the ball stays within the canvas boundaries
             if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
-                ball.reverseYSpeed(); // Reverse the ball's y-speed
+                ball.reverseYSpeed();
             }
 
-
-            if (PlayerController.isRestarted) {
-                Canvas canvas = new Canvas(Game.WIDTH, Game.HEIGHT); // Create a canvas with specified dimensions
-                GraphicsContext gcNew = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
-
-                view = new View(ball, player1, player2);
-                view.DrawScore(gcNew, 0, 0, WIDTH);
-
-                PlayerController.isRestarted = false;
-                System.out.println("Restarted Game");
-            }
-            else {
-                System.out.println("Game first starting");
-
-            }
+            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
 
             view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
 
