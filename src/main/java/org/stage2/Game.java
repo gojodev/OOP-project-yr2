@@ -33,8 +33,8 @@ import java.util.Scanner; // Import the Scanner class to read text files
 public class Game extends Application { // Class declaration and inheritance from Application class
 
     // Variables declaration
-    public static double WIDTH = 500;
-    public static double HEIGHT = 500;
+    public static double WIDTH = 550;
+    public static double HEIGHT = 550;
     public static double PLAYER_HEIGHT = 100;
     public static float PLAYER_WIDTH;
     private double BALL_R = 15;
@@ -47,7 +47,7 @@ public class Game extends Application { // Class declaration and inheritance fro
     public static int scoreP1 = 0;
     public static int scoreP2 = 0;
     public static boolean gameStarted = false;
-    public static int playerOneXPos = 0; // Initial x-position of player one paddle
+    public static double playerOneXPos =  PLAYER_WIDTH;
     public static double playerTwoXPos = WIDTH - PLAYER_WIDTH;
     private double ballSpeed;
     private int scoreLimit;
@@ -74,54 +74,70 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private boolean won = false;
 
+    public static boolean modifiedSettings = false;
+
     /**
      * Instantiates a new Game.
      */
     public Game() {
         this.player1 = new Player();
         this.player2 = new Player();
-
         player1.setName("player1");
-        ;
         player2.setName("player2");
         this.ballSpeed = 1;
         this.scoreLimit = 2;
         this.ballSpeedIncrease = 1.5;
-        this.PLAYER_WIDTH = 15;
+        PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
     public void LoadSettings() throws FileNotFoundException {
         String fileName = "settings.txt";
         try {
-            FileWriter writer = new FileWriter(fileName);
-            writer.write(player1.getName());
-            writer.write("\n" + player2.getName());
-            writer.write("\n" + (int) ballSpeed);
-            writer.write("\n" + (int) ballSpeedIncrease);
-            writer.write("\n" + scoreLimit);
-            writer.write("\n" + (int) PLAYER_WIDTH);
-            writer.close();
-            System.out.println("written to file");
-
             File settingsObj = new File(fileName);
+            settingsObj.createNewFile();
             Scanner reader = new Scanner(settingsObj);
-            while (reader.hasNextLine()) {
-                String data = reader.nextLine();
-                System.out.println(data);
+
+            // Only use new settings if there are any
+            if (reader.hasNextLine()) {
+                player1.setName(reader.nextLine());
+                player2.setName(reader.nextLine());
+                ballSpeed = reader.nextInt();
+                ballSpeedIncrease = reader.nextInt();
+                scoreLimit = reader.nextInt();
+                PLAYER_WIDTH = reader.nextInt();
+                System.out.println("Using settings from settings.txt at root");
             }
             reader.close();
+
+            // only save settings if they were modified in the Menu class
+            if (modifiedSettings) {
+                // write settings
+                FileWriter writer = new FileWriter(fileName);
+                writer.write(player1.getName());
+                writer.write("\n" + player2.getName());
+                writer.write("\n" + (int) ballSpeed);
+                writer.write("\n" + (int) ballSpeedIncrease);
+                writer.write("\n" + scoreLimit);
+                writer.write("\n" + (int) PLAYER_WIDTH);
+                writer.close();
+                System.out.println("Written to file");
+            }
+            else {
+                System.out.println("Using default settings");
+            }
         } catch (Exception e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
 
+
     /**
      * Instantiates a new Game.
      *
-     * @param p1                the p 1
-     * @param p2                the p 2
+     * @param p1                player1
+     * @param p2                player2
      * @param scoreLimit        the score limit
      * @param ballSpeed         the ball speed
      * @param ballSpeedIncrease the ball speed increase
@@ -137,23 +153,19 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
         this.PLAYER_WIDTH = racketSize;
-
-        System.out.println(p1);
-        System.out.println(p2);
-        System.out.println(scoreLimit);
-        System.out.println(ballSpeedIncrease);
-        System.out.println(racketSize);
     }
 
     // Application entry point
     public void start(Stage primaryStage) throws FileNotFoundException {
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(600);
+        System.out.println("Please resize game to your liking");
         LoadSettings();
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         scene = new Scene(root, WIDTH, HEIGHT);
 
         view = new View(ball, player1, player2);
-
 
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
         PlayerController.controls(scene, player1, player2, ball);
@@ -209,14 +221,13 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         if (!gameStarted) {
             if (scoreP1 == 0 && scoreP2 == 0) {
-                gc.fillText("CLick to Start", WIDTH / 2, HEIGHT / 2);
+                gc.fillText("Click to Start", WIDTH / 2, HEIGHT / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
                     if (!gameStarted) {
                         gameStarted = true;
                     }
                 });
-
             }
 
             String message;
@@ -252,7 +263,6 @@ public class Game extends Application { // Class declaration and inheritance fro
                     if (!gameStarted) {
                         gameStarted = true;
                     }
-                    // easier than using timeline
                     if (won) {
                         System.exit(0);
                     }
@@ -261,7 +271,7 @@ public class Game extends Application { // Class declaration and inheritance fro
 
 
         } else {
-            ball.move(); // Move the ball according to its current speed
+            ball.move();
 
             // Randomize the ball's initial speed and direction
             ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;

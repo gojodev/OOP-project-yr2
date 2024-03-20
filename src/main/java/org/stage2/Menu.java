@@ -35,13 +35,13 @@ public class Menu extends Application {
         Label scoreLimitLabel = new Label("Score Limit:");
         scoreLimitTextField = new TextField("3");
 
-        Label ballSpeedLabel = new Label("Ball Speed (0.5 recommended):");
-        ballSpeedTextField = new TextField("0.5");
+        Label ballSpeedLabel = new Label("Ball Speed");
+        ballSpeedTextField = new TextField("1");
 
-        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase (0.5 recommended):");
-        ballSpeedIncreaseTextField = new TextField("0.5");
+        Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase");
+        ballSpeedIncreaseTextField = new TextField("1.5");
 
-        Label racketSizeLabel = new Label("Racket SIze(15 recommended): ");
+        Label racketSizeLabel = new Label("Racket SIze");
         racketWidthField = new TextField("15");
 
         // Create a button to start the game
@@ -74,7 +74,7 @@ public class Menu extends Application {
         );
 
         // Create a scene with the VBox
-        Scene scene = new Scene(menuLayout, 450, 450);
+        Scene scene = new Scene(menuLayout, 600, 600);
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
@@ -86,6 +86,7 @@ public class Menu extends Application {
 
     // Method to start the game with player names and selected settings
     private void startGame(Stage primaryStage) throws Exception {
+        Game.modifiedSettings = true;
         String player1Name = player1NameTextField.getText();
         String player2Name = player2NameTextField.getText();
         int scoreLimit = Integer.parseInt(scoreLimitTextField.getText());
