@@ -38,6 +38,10 @@ public class View {
         gc.setFill(Color.WHITE);
         gc.fillRect(player1.getxPos(), player1.getyPos(), player1.getPlayerWidth(), player1.getPlayerHeight());
         gc.fillRect(player2.getxPos(), player2.getyPos(), player2.getPlayerWidth(), player2.getPlayerHeight());
+
+        // gc.fillRect(0, 0, 15, 100);
+        // gc.fillRect(player2.getxPos(), player2.getyPos(), player2.getPlayerWidth(), player2.getPlayerHeight());
+
     }
 
     public void DrawScore(int scoreP1, int scoreP2) {

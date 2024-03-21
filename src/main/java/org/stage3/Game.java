@@ -49,8 +49,8 @@ public class Game extends Application { // Class declaration and inheritance fro
     private Canvas canvas;
     private Ball ball = new Ball();
 
-    private final Player player1;
-    private final Player player2;
+    private Player player1 = new Player();
+    private Player player2 = new Player();
 
     private View view;
 
@@ -80,18 +80,23 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private double scoreLimit = 2;
 
+    private double player_width = 15;
+
+    private double player_height = 100;
+
+
     /**
      * Instantiates a new Game.
      */
     public Game() {
-        this.player1 = new Player();
-        this.player2 = new Player();
         player1.setName("player1");
         player2.setName("player2");
         ball.setBallSpeed(1);
         this.scoreLimit = 2;
         ball.setBallSpeedIncrease(1.5);
 
+        player1.setPlayerWidth(player_width);
+        player2.setPlayerWidth(player_width);
         player1.setPlayerHeight(100);
         player2.setPlayerHeight(100);
         System.out.println("Please run from Menu.java first, to customise your inputs");
@@ -131,7 +136,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                 writer.write("\n" + player2.getName());
                 writer.write("\n" + (int) ball.getBallSpeed());
                 writer.write("\n" + (int) ball.getBallSpeedIncrease());
-                writer.write("\n" + scoreLimit);
+                writer.write("\n" + (int) scoreLimit);
                 writer.write("\n" + (int) player1.getPlayerWidth());
                 writer.close();
                 System.out.println("Written to file");
@@ -221,7 +226,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         player2.setyPos(HEIGHT/2);
 
         double PLAYER_WIDTH = player1.getPlayerWidth();
-        player1.setxPos(PLAYER_WIDTH);
+        player1.setxPos(0);
         player2.setxPos(WIDTH-PLAYER_WIDTH);
 
         tl.play(); // Start the animation timeline

@@ -19,8 +19,6 @@ public class Player {
 
     private double player_height;
 
-    private Rectangle paddle;
-
     private boolean lastTouched;
 
     /**
@@ -56,7 +54,8 @@ public class Player {
         this.yPos = 0;
         this.score = 0;
         this.lastTouched = false;
-        this.paddle = new Rectangle(50, 50);
+        this.player_width = 15;
+        this.player_height = 100;
     }
 
     /**
@@ -128,7 +127,6 @@ public class Player {
      */
     public void setxPos(double xPos) {
         this.xPos = xPos;
-        paddle.setX(xPos);
     }
 
     /**
@@ -147,7 +145,6 @@ public class Player {
      */
     public void setyPos(double yPos) {
         this.yPos = yPos;
-        paddle.setY(yPos);
     }
 
     /**
@@ -168,16 +165,6 @@ public class Player {
         this.score = score;
     }
 
-    /**
-     * Gets paddle.
-     *
-     * @param gc the gc
-     * @return the paddle
-     */
-    public Rectangle getPaddle(GraphicsContext gc) {
-        gc.fillRect(xPos, yPos, player_width, player_width);
-        return paddle;
-    }
 
     /**
      * Move up.
