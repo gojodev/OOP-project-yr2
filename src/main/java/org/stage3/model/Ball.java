@@ -11,12 +11,24 @@ import java.util.Random;
 public class Ball  {
     private double xPos;
     private double yPos;
+
+    private double ballSpeed;
     private double xSpeed = 1;
     private double ySpeed = 1;
 
     private double BALL_R = 15;
 
     private Circle ballz;
+
+    private double ballSpeedIncrease;
+
+    public Ball() {
+        this.xPos = 0;
+        this.yPos = 0;
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+        this.ballz = new Circle(BALL_R * 2);
+    }
 
 
     /**
@@ -33,6 +45,26 @@ public class Ball  {
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.ballz = new Circle(BALL_R * 2);
+    }
+
+    public double getRadius() {
+        return BALL_R;
+    }
+
+    public double getBallSpeed() {
+        return ballSpeed;
+    }
+
+    public void setBallSpeed(double ballSpeed) {
+        this.ballSpeed = ballSpeed;
+    }
+
+    public double getBallSpeedIncrease() {
+        return ballSpeedIncrease;
+    }
+
+    public void setBallSpeedIncrease(double ballSpeedIncrease) {
+        this.ballSpeedIncrease = ballSpeedIncrease;
     }
 
     /**

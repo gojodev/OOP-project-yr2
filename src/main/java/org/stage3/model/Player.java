@@ -17,6 +17,8 @@ public class Player {
 
     private double player_width;
 
+    private double player_height;
+
     private Rectangle paddle;
 
     private boolean lastTouched;
@@ -60,18 +62,6 @@ public class Player {
     /**
      * Instantiates a new Player.
      *
-     * @param name the name
-     */
-    public Player(String name) {
-        this.name = name;
-        this.xPos = 0;
-        this.yPos = 0;
-        this.score = 0;
-    }
-
-    /**
-     * Instantiates a new Player.
-     *
      * @param name  the name
      * @param xPos  the x pos
      * @param yPos  the y pos
@@ -82,6 +72,22 @@ public class Player {
         this.xPos = xPos;
         this.yPos = yPos;
         this.score = score;
+    }
+
+    public double getPlayerWidth() {
+        return player_width;
+    }
+
+    public void setPlayerWidth(double width) {
+        this.player_width = width;
+    }
+
+    public double getPlayerHeight() {
+        return player_height;
+    }
+
+    public void setPlayerHeight(double height) {
+        this.player_height = height;
     }
 
     /**
@@ -109,6 +115,10 @@ public class Player {
      */
     public double getxPos() {
         return xPos;
+    }
+
+    public void increaseScore() {
+        this.score++;
     }
 
     /**

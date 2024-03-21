@@ -41,69 +41,20 @@ public class Game extends Application { // Class declaration and inheritance fro
      * The constant HEIGHT.
      */
     public static double HEIGHT = 550;
-    /**
-     * The constant PLAYER_HEIGHT.
-     */
-    public static double PLAYER_HEIGHT = 100;
-    /**
-     * The constant PLAYER_WIDTH.
-     */
-    public static float PLAYER_WIDTH = 15;
-    public static double BALL_R = 15;
-    /**
-     * The constant ballYSpeed.
-     */
-    public static double ballYSpeed = 1;
-    /**
-     * The constant ballXSpeed.
-     */
-    public static double ballXSpeed = 1;
-    /**
-     * The constant playerOneYPos.
-     */
-    public static double playerOneYPos = HEIGHT / 2;
-    /**
-     * The constant playerTwoYPos.
-     */
-    public static double playerTwoYPos = HEIGHT / 2;
-    /**
-     * The constant ballXPos.
-     */
-    public static double ballXPos = WIDTH / 2;
-    /**
-     * The constant ballYPos.
-     */
-    public static double ballYPos = HEIGHT / 2;
-    /**
-     * The constant scoreP1.
-     */
-    public static int scoreP1 = 0;
-    /**
-     * The constant scoreP2.
-     */
-    public static int scoreP2 = 0;
+
     /**
      * The constant gameStarted.
      */
     public static boolean gameStarted = false;
-    /**
-     * The constant playerOneXPos.
-     */
-    public static double playerOneXPos =  0;
-    /**
-     * The constant playerTwoXPos.
-     */
-    public static double playerTwoXPos = WIDTH - PLAYER_WIDTH;
-    private double ballSpeed;
-    private int scoreLimit;
-    private double ballSpeedIncrease;
     private Canvas canvas;
-    private Ball ball;
+    private Ball ball = new Ball();
 
-    private Player player1;
-    private Player player2;
+    private final Player player1;
+    private final Player player2;
 
     private View view;
+
+    private PlayerController playerController;
 
     /**
      * The constant tl.
@@ -127,6 +78,8 @@ public class Game extends Application { // Class declaration and inheritance fro
      */
     public static boolean modifiedSettings = false;
 
+    private double scoreLimit = 2;
+
     /**
      * Instantiates a new Game.
      */
@@ -135,9 +88,12 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.player2 = new Player();
         player1.setName("player1");
         player2.setName("player2");
-        this.ballSpeed = 1;
+        ball.setBallSpeed(1);
         this.scoreLimit = 2;
-        this.ballSpeedIncrease = 1.5;
+        ball.setBallSpeedIncrease(1.5);
+
+        player1.setPlayerHeight(100);
+        player2.setPlayerHeight(100);
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
@@ -157,10 +113,12 @@ public class Game extends Application { // Class declaration and inheritance fro
             if (reader.hasNextLine()) {
                 player1.setName(reader.nextLine());
                 player2.setName(reader.nextLine());
-                ballSpeed = reader.nextInt();
-                ballSpeedIncrease = reader.nextInt();
-                scoreLimit = reader.nextInt();
-                PLAYER_WIDTH = reader.nextInt();
+                ball.setBallSpeed(reader.nextInt());
+                ball.setBallSpeedIncrease(reader.nextInt());
+                this.scoreLimit = reader.nextInt();
+                double PLAYER_WIDTH = reader.nextInt();
+                player1.setPlayerWidth(PLAYER_WIDTH);
+                player2.setPlayerWidth(PLAYER_WIDTH);
                 System.out.println("Using settings from settings.txt at root");
             }
             reader.close();
@@ -171,10 +129,10 @@ public class Game extends Application { // Class declaration and inheritance fro
                 FileWriter writer = new FileWriter(fileName);
                 writer.write(player1.getName());
                 writer.write("\n" + player2.getName());
-                writer.write("\n" + (int) ballSpeed);
-                writer.write("\n" + (int) ballSpeedIncrease);
+                writer.write("\n" + (int) ball.getBallSpeed());
+                writer.write("\n" + (int) ball.getBallSpeedIncrease());
                 writer.write("\n" + scoreLimit);
-                writer.write("\n" + (int) PLAYER_WIDTH);
+                writer.write("\n" + (int) player1.getPlayerWidth());
                 writer.close();
                 System.out.println("Written to file");
             }
@@ -204,30 +162,33 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         player1.setName(p1);
         player2.setName(p2);
-        this.ballSpeed = ballSpeed;
+        ball.setBallSpeed(ballSpeed);
         this.scoreLimit = scoreLimit;
-        this.ballSpeedIncrease = ballSpeedIncrease;
-        PLAYER_WIDTH = racketSize;
+        ball.setBallSpeedIncrease(ballSpeedIncrease);
+        player1.setPlayerWidth(racketSize);
+        player2.setPlayerWidth(racketSize);
+
+        player1.setPlayerHeight(100);
+        player2.setPlayerHeight(100);
     }
 
     // Application entry point
     public void start(Stage primaryStage) throws FileNotFoundException {
-//        primaryStage.setMinWidth(600);
-//        primaryStage.setMinHeight(600);
         System.out.println("Please resize game to your liking");
         LoadSettings();
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         scene = new Scene(root, WIDTH, HEIGHT);
 
-        view = new View(ball, player1, player2);
-
         ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
-        PlayerController.controls(scene, player1, player2, ball);
 
-        canvas = new Canvas(WIDTH, HEIGHT); // Create a canvas with specified dimensions
+        canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
         root.getChildren().add(canvas);
+        view = new View(gc, ball, player1, player2);
+
+        playerController = new PlayerController(scene, player1, player2, ball);
+        playerController.controls();
 
         tl = new Timeline(new KeyFrame(Duration.millis(10), e -> {
             try {
@@ -259,7 +220,8 @@ public class Game extends Application { // Class declaration and inheritance fro
         player1.setyPos(HEIGHT/2);
         player2.setyPos(HEIGHT/2);
 
-//        player1.setxPos(PLAYER_WIDTH);
+        double PLAYER_WIDTH = player1.getPlayerWidth();
+        player1.setxPos(PLAYER_WIDTH);
         player2.setxPos(WIDTH-PLAYER_WIDTH);
 
         tl.play(); // Start the animation timeline
@@ -273,14 +235,14 @@ public class Game extends Application { // Class declaration and inheritance fro
             return;
         }
 
-        gc.setFill(Color.BLACK); // Set the background color to black
-        gc.fillRect(0, 0, WIDTH, HEIGHT); // Fill the entire canvas with the background color
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, WIDTH, HEIGHT);
 
-        gc.setFill(Color.WHITE); // Set text color to white
-        gc.setFont(Font.font("Arial", 25)); // Set font size
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font("Arial", 25));
 
         if (!gameStarted) {
-            if (scoreP1 == 0 && scoreP2 == 0) {
+            if (player1.getScore() == 0 && player2.getScore() == 0) {
                 gc.fillText("Click to Start", WIDTH / 2, HEIGHT / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
@@ -291,7 +253,7 @@ public class Game extends Application { // Class declaration and inheritance fro
             }
 
             String message;
-            if (player1.isLastTouched()) {
+            if (player1.isLastTouched() && !PlayerController.isRestarted) {
                 if (player1.getScore() == scoreLimit) {
                     message = "Player1 won";
                     won = true;
@@ -309,7 +271,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                         System.exit(0);
                     }
                 });
-            } else if (player2.isLastTouched()) {
+            } else if (player2.isLastTouched() && !PlayerController.isRestarted) {
                 if (player2.getScore() == scoreLimit) {
                     message = "Player2 won";
                     won = true;
@@ -333,26 +295,26 @@ public class Game extends Application { // Class declaration and inheritance fro
         } else {
             ball.move();
 
+            // Update the view object everytime the game is running (10ms)
+            view = new View(gc, ball, player1, player2);
+            playerController = new PlayerController(scene, player1, player2, ball);
+
             // Randomize the ball's initial speed and direction
-            ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
-            ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+            double ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+            double ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
 
-            ballXPos = ball.getXPos(); // Update ballXPos   with the new x-position
-            ballYPos = ball.getYPos(); // Update ballYPos with the new y-position
+            ball.setXSpeed(ballXSpeed);
+            ball.setYSpeed(ballYSpeed);
 
-            PlayerController.controls(scene, player1, player2, ball);
+            playerController.controls();
 
-            view.DrawRackets(gc, PLAYER_WIDTH, PLAYER_HEIGHT, playerTwoXPos, playerTwoYPos);
-            view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
+            view.DrawRackets();
+            playerController.PaddleCollision();
 
-            PlayerController.PaddleCollision(ballXPos, ballYPos, playerOneXPos, playerOneYPos, playerTwoXPos, playerTwoYPos, ballSpeedIncrease, PLAYER_WIDTH, PLAYER_HEIGHT, ball, BALL_R);
-            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
+            view.DrawScore(player1.getScore(), player2.getScore());
 
-
-            gc.setStroke(Color.WHITE);
-            gc.setTextAlign(TextAlignment.CENTER);
-            PlayerController.BallBoundsLogic(ball, player1, player2);
-
+            view.DrawBall();
+            playerController.BallBoundsLogic(ball, player1, player2);
         }
     }
 
