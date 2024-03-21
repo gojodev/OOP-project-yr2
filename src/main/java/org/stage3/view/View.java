@@ -16,10 +16,6 @@ public class View {
     private Player player1;
     private Player player2;
 
-    /**
-     * The Is paused.
-     */
-    private boolean isPaused = false;
 
     /**
      * Instantiates a new View.

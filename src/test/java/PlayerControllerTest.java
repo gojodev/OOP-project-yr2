@@ -1,10 +1,11 @@
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import org.junit.jupiter.api.Test;
 import org.stage3.Game;
 import org.stage3.model.Ball;
 import org.stage3.model.Player;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Random;
 
 /**
  * The type Player controller.
@@ -61,9 +62,6 @@ public class PlayerControllerTest {
 
             // Restart the game
             if (keyEvent.getCode() == KeyCode.R) {
-                ball.setXPos(centerX);
-                ball.setXPos(centerY);
-
                 p1.setxPos(0);
                 p1.setyPos(centerY);
 
@@ -72,6 +70,16 @@ public class PlayerControllerTest {
 
                 p1.setScore(0);
                 p2.setScore(0);
+
+                ball.setXPos(centerX);
+                ball.setXPos(centerY);
+
+                // Randomize the ball's initial speed and direction
+                Game.ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+                Game.ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
+
+                ball.move();
+
                 isRestarted = true;
             } else {
                 PlayerControllerTest.isRestarted = false;
@@ -94,7 +102,6 @@ public class PlayerControllerTest {
      * @param ball              the ball
      * @param BALL_R            the ball r
      */
-
     public static void PaddleCollision(double ballXPos, double ballYPos, double playerOneXPos, double playerOneYPos,
                                        double playerTwoXPos, double playerTwoYPos, double ballSpeedIncrease,
                                        double PLAYER_WIDTH, double PLAYER_HEIGHT, Ball ball, double BALL_R) {
@@ -149,6 +156,11 @@ public class PlayerControllerTest {
             ball.setYPos(Game.HEIGHT / 2);
             player1.setLastTouched(true);
             Game.gameStarted = false;
+        }
+
+        // Ensure the ball stays within the canvas boundaries
+        if (Game.ballYPos + Game.BALL_R > Game.HEIGHT || Game.ballYPos < 0) {
+            ball.reverseYSpeed();
         }
     }
 }

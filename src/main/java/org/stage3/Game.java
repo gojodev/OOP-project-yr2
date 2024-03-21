@@ -48,8 +48,8 @@ public class Game extends Application { // Class declaration and inheritance fro
     /**
      * The constant PLAYER_WIDTH.
      */
-    public static float PLAYER_WIDTH;
-    private double BALL_R = 15;
+    public static float PLAYER_WIDTH = 15;
+    public static double BALL_R = 15;
     /**
      * The constant ballYSpeed.
      */
@@ -89,7 +89,7 @@ public class Game extends Application { // Class declaration and inheritance fro
     /**
      * The constant playerOneXPos.
      */
-    public static double playerOneXPos =  PLAYER_WIDTH;
+    public static double playerOneXPos =  0;
     /**
      * The constant playerTwoXPos.
      */
@@ -138,7 +138,6 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.ballSpeed = 1;
         this.scoreLimit = 2;
         this.ballSpeedIncrease = 1.5;
-        PLAYER_WIDTH = 15;
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
@@ -208,13 +207,13 @@ public class Game extends Application { // Class declaration and inheritance fro
         this.ballSpeed = ballSpeed;
         this.scoreLimit = scoreLimit;
         this.ballSpeedIncrease = ballSpeedIncrease;
-        this.PLAYER_WIDTH = racketSize;
+        PLAYER_WIDTH = racketSize;
     }
 
     // Application entry point
     public void start(Stage primaryStage) throws FileNotFoundException {
-        primaryStage.setMinWidth(600);
-        primaryStage.setMinHeight(600);
+//        primaryStage.setMinWidth(600);
+//        primaryStage.setMinHeight(600);
         System.out.println("Please resize game to your liking");
         LoadSettings();
         primaryStage.setTitle("PONG Game Project");
@@ -248,7 +247,6 @@ public class Game extends Application { // Class declaration and inheritance fro
                 HEIGHT = scene.getHeight();
                 canvas.setWidth(WIDTH);
                 canvas.setHeight(HEIGHT);
-                playerTwoXPos = WIDTH - PLAYER_WIDTH;
             }
         };
 
@@ -257,6 +255,12 @@ public class Game extends Application { // Class declaration and inheritance fro
 
         primaryStage.setScene(scene); // Set the scene with the canvas
         primaryStage.show(); // Display the stage
+
+        player1.setyPos(HEIGHT/2);
+        player2.setyPos(HEIGHT/2);
+
+//        player1.setxPos(PLAYER_WIDTH);
+        player2.setxPos(WIDTH-PLAYER_WIDTH);
 
         tl.play(); // Start the animation timeline
     }
@@ -293,7 +297,6 @@ public class Game extends Application { // Class declaration and inheritance fro
                     won = true;
                 } else {
                     message = "Player1 scored";
-                    ballSpeed = 1;
                 }
                 gc.strokeText(message, WIDTH / 2, HEIGHT / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
@@ -312,7 +315,6 @@ public class Game extends Application { // Class declaration and inheritance fro
                     won = true;
                 } else {
                     message = "Player2 scored";
-                    ballSpeed = 1;
                 }
 
                 gc.strokeText(message, WIDTH / 2, HEIGHT / 2);
@@ -340,23 +342,16 @@ public class Game extends Application { // Class declaration and inheritance fro
 
             PlayerController.controls(scene, player1, player2, ball);
 
-            // Ensure the ball stays within the canvas boundaries
-            if (ballYPos + BALL_R > HEIGHT || ballYPos < 0) {
-                ball.reverseYSpeed();
-            }
-
-            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
-
+            view.DrawRackets(gc, PLAYER_WIDTH, PLAYER_HEIGHT, playerTwoXPos, playerTwoYPos);
             view.DrawBall(gc, ballXPos, ballYPos, BALL_R);
 
             PlayerController.PaddleCollision(ballXPos, ballYPos, playerOneXPos, playerOneYPos, playerTwoXPos, playerTwoYPos, ballSpeedIncrease, PLAYER_WIDTH, PLAYER_HEIGHT, ball, BALL_R);
+            view.DrawScore(gc, scoreP1, scoreP2, WIDTH);
 
-            gc.setStroke(Color.WHITE); // Set stroke color to white
-            gc.setTextAlign(TextAlignment.CENTER); // Set text alignment to center
 
+            gc.setStroke(Color.WHITE);
+            gc.setTextAlign(TextAlignment.CENTER);
             PlayerController.BallBoundsLogic(ball, player1, player2);
-
-            view.DrawRackets(gc, PLAYER_WIDTH, PLAYER_HEIGHT, playerTwoXPos, playerTwoYPos);
 
         }
     }

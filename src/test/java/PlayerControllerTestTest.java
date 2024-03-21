@@ -1,13 +1,20 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The type Player controller tester.
+ */
 class PlayerControllerTestTest {
 
+    /**
+     * Paddle collision.
+     */
     @Test
     void paddleCollision() {
     }
 
+    /**
+     * Ball bounds logic.
+     */
     @Test
     void ballBoundsLogic() {
     }

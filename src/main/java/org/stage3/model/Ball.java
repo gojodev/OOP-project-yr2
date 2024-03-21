@@ -115,9 +115,9 @@ public class Ball  {
      */
 // Method to adjust the ball's speed by a given percentage
     public void adjustSpeed(double increase) {
-        // Increase the speed by the given percentage
-        this.xSpeed += increase;
-        this.ySpeed += increase;
+        int maxSpeed = 2;
+        this.xSpeed += this.xSpeed * increase <= maxSpeed ? increase : 0;
+        this.ySpeed += this.ySpeed * increase <= maxSpeed ? increase : 0;
     }
 
     /**

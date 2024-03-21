@@ -72,13 +72,14 @@ public class PlayerController {
                 p1.setScore(0);
                 p2.setScore(0);
 
-                ball.move();
+                ball.setXPos(centerX);
+                ball.setXPos(centerY);
+
                 // Randomize the ball's initial speed and direction
                 Game.ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
                 Game.ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
 
-                ball.setXPos(centerX);
-                ball.setXPos(centerY);
+                ball.move();
 
                 isRestarted = true;
             } else {
@@ -156,6 +157,11 @@ public class PlayerController {
             ball.setYPos(Game.HEIGHT / 2);
             player1.setLastTouched(true);
             Game.gameStarted = false;
+        }
+
+        // Ensure the ball stays within the canvas boundaries
+        if (Game.ballYPos + Game.BALL_R > Game.HEIGHT || Game.ballYPos < 0) {
+            ball.reverseYSpeed();
         }
     }
 }
