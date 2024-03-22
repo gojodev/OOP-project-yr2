@@ -14,13 +14,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.stage3.controller.PlayerController;
+import org.stage3.controller.CollisionTest;
 import org.stage3.model.Ball;
 import org.stage3.model.Player;
 import org.stage3.view.View;
 
 import java.io.FileWriter;
-import java.util.Random;
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
@@ -36,25 +35,25 @@ public class Game extends Application { // Class declaration and inheritance fro
      * The constant WIDTH.
      */
 // Variables declaration
-    public static double WIDTH = 550;
+    public static double width = 550;
     /**
      * The constant HEIGHT.
      */
-    public static double HEIGHT = 550;
+    public static double height = 550;
 
     /**
      * The constant gameStarted.
      */
     public static boolean gameStarted = false;
     private Canvas canvas;
-    private Ball ball = new Ball();
+    private Ball ball;
 
     private Player player1 = new Player();
     private Player player2 = new Player();
 
     private View view;
 
-    private PlayerController playerController;
+    private CollisionTest collisionTest;
 
     /**
      * The constant tl.
@@ -78,27 +77,33 @@ public class Game extends Application { // Class declaration and inheritance fro
      */
     public static boolean modifiedSettings = false;
 
-    private double scoreLimit = 2;
+    private double scoreLimit;
 
-    private double player_width = 15;
+    /**
+     * The Player width.
+     */
+    double player_width;
 
-    private double player_height = 100;
+    /**
+     * The Player height.
+     */
+    double player_height = 100;
 
 
     /**
      * Instantiates a new Game.
      */
     public Game() {
+        this.ball = new Ball();
+        this.scoreLimit = 2;
+        player_width = 15;
+
         player1.setName("player1");
         player2.setName("player2");
-        ball.setBallSpeed(1);
-        this.scoreLimit = 2;
-        ball.setBallSpeedIncrease(1.5);
-
         player1.setPlayerWidth(player_width);
         player2.setPlayerWidth(player_width);
-        player1.setPlayerHeight(100);
-        player2.setPlayerHeight(100);
+        player1.setPlayerHeight(player_height);
+        player2.setPlayerHeight(player_height);
         System.out.println("Please run from Menu.java first, to customise your inputs");
     }
 
@@ -140,8 +145,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                 writer.write("\n" + (int) player1.getPlayerWidth());
                 writer.close();
                 System.out.println("Written to file");
-            }
-            else {
+            } else {
                 System.out.println("Using default settings");
             }
         } catch (Exception e) {
@@ -154,22 +158,20 @@ public class Game extends Application { // Class declaration and inheritance fro
     /**
      * Instantiates a new Game.
      *
-     * @param p1                player1
-     * @param p2                player2
-     * @param scoreLimit        the score limit
-     * @param ballSpeed         the ball speed
-     * @param ballSpeedIncrease the ball speed increase
-     * @param racketSize        the racket size
+     * @param p1         player1
+     * @param p2         player2
+     * @param scoreLimit the score limit
+     * @param racketSize the racket size
+     * @param ball       the ball
      */
-    public Game(String p1, String p2, int scoreLimit, double ballSpeed, double ballSpeedIncrease, int racketSize) {
+    public Game(String p1, String p2, int scoreLimit, int racketSize, Ball ball) {
         this.player1 = new Player();
         this.player2 = new Player();
+        this.ball = ball;
 
         player1.setName(p1);
         player2.setName(p2);
-        ball.setBallSpeed(ballSpeed);
         this.scoreLimit = scoreLimit;
-        ball.setBallSpeedIncrease(ballSpeedIncrease);
         player1.setPlayerWidth(racketSize);
         player2.setPlayerWidth(racketSize);
 
@@ -177,26 +179,65 @@ public class Game extends Application { // Class declaration and inheritance fro
         player2.setPlayerHeight(100);
     }
 
+    public void centerPaddles() {
+        player1.setyPos(height / 2);
+        player2.setyPos(height / 2);
+
+        double PLAYER_WIDTH = player1.getPlayerWidth();
+        player1.setxPos(0);
+        player2.setxPos(width - PLAYER_WIDTH);
+    }
+
+
+    /**
+     * Resize window.
+     *
+     * @param scene  the scene
+     * @param canvas the canvas
+     */
+    public void resizeWindow(Scene scene, Canvas canvas) {
+        // Adjust positions when window is resized
+        ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                width = scene.getWidth();
+                height = scene.getHeight();
+                System.out.println(width + " , " + height);
+                canvas.setWidth(width);
+                canvas.setHeight(height);
+
+                centerPaddles();
+            }
+        };
+
+        scene.widthProperty().addListener(resizeListener);
+        scene.heightProperty().addListener(resizeListener);
+    }
+
     // Application entry point
     public void start(Stage primaryStage) throws FileNotFoundException {
         System.out.println("Please resize game to your liking");
+        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(400);
         LoadSettings();
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
-        scene = new Scene(root, WIDTH, HEIGHT);
+        scene = new Scene(root, width, height);
 
-        ball = Ball.createRandomizedBall(WIDTH / 2, HEIGHT / 2);
+        ball.RandomDirection(width / 2, height / 2);
 
-        canvas = new Canvas(WIDTH, HEIGHT);
+        canvas = new Canvas(width, height);
         GraphicsContext gc = canvas.getGraphicsContext2D(); // Get the graphics context from the canvas
         root.getChildren().add(canvas);
-        view = new View(gc, ball, player1, player2);
+        view = new View(gc, ball, player1, player2, width, height);
 
-        playerController = new PlayerController(scene, player1, player2, ball);
-        playerController.controls();
+        centerPaddles();
 
         tl = new Timeline(new KeyFrame(Duration.millis(10), e -> {
             try {
+                // Adjust positions when window is resized
+                resizeWindow(scene, canvas);
+
                 run(gc);
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -204,30 +245,8 @@ public class Game extends Application { // Class declaration and inheritance fro
         })); // Create a timeline for animation
         tl.setCycleCount(Timeline.INDEFINITE); // Set the animation to repeat indefinitely
 
-
-        // Adjust positions when window is resized
-        ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                WIDTH = scene.getWidth();
-                HEIGHT = scene.getHeight();
-                canvas.setWidth(WIDTH);
-                canvas.setHeight(HEIGHT);
-            }
-        };
-
-        scene.widthProperty().addListener(resizeListener);
-        scene.heightProperty().addListener(resizeListener);
-
         primaryStage.setScene(scene); // Set the scene with the canvas
         primaryStage.show(); // Display the stage
-
-        player1.setyPos(HEIGHT/2);
-        player2.setyPos(HEIGHT/2);
-
-        double PLAYER_WIDTH = player1.getPlayerWidth();
-        player1.setxPos(0);
-        player2.setxPos(WIDTH-PLAYER_WIDTH);
 
         tl.play(); // Start the animation timeline
     }
@@ -235,20 +254,21 @@ public class Game extends Application { // Class declaration and inheritance fro
     // Method to handle the game logic and drawing
     private void run(GraphicsContext gc) throws InterruptedException {
         // Check if the game window becomes blank
-        if (WIDTH == 0 || HEIGHT == 0) {
+        if (width == 0 || height == 0) {
             System.out.println("Error Game window dimensions are invalid. Please resize the window.");
             return;
         }
 
         gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, WIDTH, HEIGHT);
+        gc.fillRect(0, 0, width, height);
 
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", 25));
 
         if (!gameStarted) {
+            centerPaddles();
             if (player1.getScore() == 0 && player2.getScore() == 0) {
-                gc.fillText("Click to Start", WIDTH / 2, HEIGHT / 2);
+                gc.fillText("Click to Start", width / 2, height / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
                     if (!gameStarted) {
@@ -258,14 +278,14 @@ public class Game extends Application { // Class declaration and inheritance fro
             }
 
             String message;
-            if (player1.isLastTouched() && !PlayerController.isRestarted) {
+            if (player1.isLastTouched() && !CollisionTest.isRestarted) {
                 if (player1.getScore() == scoreLimit) {
-                    message = "Player1 won";
+                    message = player1.getName() + " won";
                     won = true;
                 } else {
-                    message = "Player1 scored";
+                    message = player1.getName() + " scored";
                 }
-                gc.strokeText(message, WIDTH / 2, HEIGHT / 2);
+                gc.strokeText(message, width / 2, height / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
                     if (!gameStarted) {
@@ -276,15 +296,15 @@ public class Game extends Application { // Class declaration and inheritance fro
                         System.exit(0);
                     }
                 });
-            } else if (player2.isLastTouched() && !PlayerController.isRestarted) {
+            } else if (player2.isLastTouched() && !CollisionTest.isRestarted) {
                 if (player2.getScore() == scoreLimit) {
-                    message = "Player2 won";
+                    message = player2.getName() + "won";
                     won = true;
                 } else {
-                    message = "Player2 scored";
+                    message = player2.getName() + " scored";
                 }
 
-                gc.strokeText(message, WIDTH / 2, HEIGHT / 2);
+                gc.strokeText(message, width / 2, height / 2);
                 gc.setTextAlign(TextAlignment.CENTER);
                 canvas.setOnMouseClicked(e -> {
                     if (!gameStarted) {
@@ -295,34 +315,20 @@ public class Game extends Application { // Class declaration and inheritance fro
                     }
                 });
             }
-
-
         } else {
             ball.move();
-
             // Update the view object everytime the game is running (10ms)
-            view = new View(gc, ball, player1, player2);
-            playerController = new PlayerController(scene, player1, player2, ball);
-
-            // Randomize the ball's initial speed and direction
-            double ballXSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
-            double ballYSpeed = new Random().nextInt(3) == 0 ? 1 : -1;
-
-            ball.setXSpeed(ballXSpeed);
-            ball.setYSpeed(ballYSpeed);
-
-            playerController.controls();
-
-            view.DrawRackets();
-            playerController.PaddleCollision();
-
+            view = new View(gc, ball, player1, player2, width, height);
+            collisionTest = new CollisionTest(scene, player1, player2, ball, width, height);
+            collisionTest.controls();
             view.DrawScore(player1.getScore(), player2.getScore());
-
+            view.DrawRackets();
             view.DrawBall();
-            playerController.BallBoundsLogic(ball, player1, player2);
+
+            collisionTest.BallBoundsLogic(ball, player1, player2);
+            collisionTest.PaddleCollision();
         }
     }
-
 
     /**
      * The entry point of application.

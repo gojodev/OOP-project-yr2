@@ -6,7 +6,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.stage3.model.Ball;
 
 /**
  * The type Menu.
@@ -39,7 +41,7 @@ public class Menu extends Application {
         ballSpeedTextField = new TextField("1");
 
         Label ballSpeedIncreaseLabel = new Label("Ball Speed Increase");
-        ballSpeedIncreaseTextField = new TextField("1.5");
+        ballSpeedIncreaseTextField = new TextField("0.1");
 
         Label racketSizeLabel = new Label("Racket SIze");
         racketWidthField = new TextField("15");
@@ -53,6 +55,17 @@ public class Menu extends Application {
                 System.out.println("Error Failed to start the game: " + e.getMessage());
             }
         });
+
+        Text infoText = new Text("""
+                You can press:
+                \t-W to move player 1 up
+                \t-S to move player 1 down
+                
+                \t-UP to move player 2 up
+                \t-DOWN to move player 2 down
+                
+                \t-ESC to pause the game
+                \t-R to restart at any time""");
 
         // Create a button to quit the game
         Button quitButton = new Button("Quit");
@@ -70,11 +83,12 @@ public class Menu extends Application {
                 ballSpeedIncreaseLabel, ballSpeedIncreaseTextField,
                 racketSizeLabel, racketWidthField,
                 startGameButton,
+                infoText,
                 quitButton
         );
 
         // Create a scene with the VBox
-        Scene scene = new Scene(menuLayout, 600, 600);
+        Scene scene = new Scene(menuLayout, 800, 800);
 
         // Set the scene and show the stage
         primaryStage.setScene(scene);
@@ -94,8 +108,9 @@ public class Menu extends Application {
         double ballSpeedIncrease = Double.parseDouble(ballSpeedIncreaseTextField.getText());
         int racketSize = Integer.parseInt(racketWidthField.getText());
 
-        // Instantiate and start the game with selected settings
-         Game game = new Game(player1Name, player2Name, scoreLimit, ballSpeed, ballSpeedIncrease, racketSize);
+        // The data to be given to Game.java
+        Ball ball = new Ball(ballSpeed, ballSpeedIncrease);
+        Game game = new Game(player1Name, player2Name, scoreLimit, racketSize, ball);
         game.start(primaryStage);
     }
 

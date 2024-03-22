@@ -1,17 +1,16 @@
 package org.stage3.controller;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import org.stage3.Game;
 import org.stage3.model.Ball;
 import org.stage3.model.Player;
 
-import java.util.Random;
-
 /**
  * The type Player controller.
  */
-public class PlayerController {
+public class Controller {
 
     /**
      * The constant isRestarted.
@@ -26,6 +25,9 @@ public class PlayerController {
 
     private Ball ball;
 
+    private double width;
+    private double height;
+
     /**
      * Instantiates a new Player controller.
      *
@@ -34,34 +36,32 @@ public class PlayerController {
      * @param player2 the player 2
      * @param ball    the ball
      */
-    public PlayerController(Scene scene, Player player1, Player player2, Ball ball) {
+    public Controller(Scene scene, Player player1, Player player2, Ball ball, double width, double height) {
         this.scene = scene;
         this.player1 = player1;
         this.player2 = player2;
         this.ball = ball;
+        this.width = width;
+        this.height = height;
     }
 
 
     public void controls() {
-        double centerX = Game.WIDTH / 2;
-        double centerY = Game.HEIGHT / 2;
+        double centerX = width / 2;
+        double centerY = height / 2;
+
         scene.setOnKeyPressed(keyEvent -> {
 
-            // Player 1 controls
             if (keyEvent.getCode() == KeyCode.W) {
                 player1.moveUp();
             }
-
-            if (keyEvent.getCode() == KeyCode.S) {
+            else if (keyEvent.getCode() == KeyCode.S) {
                 player1.moveDown();
             }
-
-            // Player2 controls
-            if (keyEvent.getCode() == KeyCode.UP) {
+            else if (keyEvent.getCode() == KeyCode.UP) {
                 player2.moveUp();
             }
-
-            if (keyEvent.getCode() == KeyCode.DOWN) {
+            else if (keyEvent.getCode() == KeyCode.DOWN) {
                 player2.moveDown();
             }
 
@@ -82,7 +82,7 @@ public class PlayerController {
                 player1.setxPos(0);
                 player1.setyPos(centerY);
 
-                player2.setxPos(centerX);
+                player2.setxPos(width - player2.getPlayerWidth());
                 player2.setyPos(centerY);
 
                 player1.setScore(0);
@@ -90,11 +90,14 @@ public class PlayerController {
 
                 ball.setXPos(centerX);
                 ball.setYPos(centerY);
+
+                ball.RandomDirection(centerX, centerY);
+
                 isRestarted = true;
                 Game.gameStarted = false;
                 System.out.println("Game reset");
             } else {
-                PlayerController.isRestarted = false;
+                isRestarted = false;
             }
         });
     }
@@ -103,15 +106,13 @@ public class PlayerController {
         // Check collision with player one paddle
         if (ball.getXPos() <= player1.getxPos() + player1.getPlayerWidth() && ball.getYPos() >= player1.getyPos() && ball.getYPos() <= player1.getyPos() + player1.getPlayerHeight()) {
             ball.reverseXSpeed();
-            ball.reverseYSpeed();
-            ball.adjustSpeed(ball.getBallSpeedIncrease());
+            ball.increaseBallSpeed(0.1);
         }
 
         // Check collision with player two paddle
         if (ball.getXPos() + ball.getRadius() >= player2.getxPos() && ball.getYPos() >= player2.getyPos() && ball.getYPos() <= player2.getyPos() + player2.getPlayerHeight()) {
             ball.reverseXSpeed();
-            ball.reverseYSpeed();
-            ball.adjustSpeed(ball.getBallSpeedIncrease());
+            ball.increaseBallSpeed(0.1);
         }
     }
 
@@ -123,33 +124,29 @@ public class PlayerController {
      * @param player2 the player 2
      */
     public void BallBoundsLogic(Ball ball, Player player1, Player player2) {
-        // reset the balls position
-        ball.setXPos(Game.WIDTH/2);
-        ball.setYPos(Game.HEIGHT/2);
-
         // Ensure the ball stays within the canvas boundaries vertically
-        if (ball.getYPos() + ball.getRadius() > Game.HEIGHT || ball.getYPos() < 0) {
+        if (ball.getYPos() + ball.getRadius() > height || ball.getYPos() < 0) {
             ball.reverseYSpeed();
         }
 
         // Ensure player paddles stay within the bounds of the game window
-        player1.setyPos(Math.max(0, Math.min(player1.getyPos(), Game.HEIGHT - player1.getPlayerHeight())));
-        player2.setyPos(Math.max(0, Math.min(player2.getyPos(), Game.HEIGHT - player2.getPlayerHeight())));
+        player1.setyPos(Math.max(0, Math.min(player1.getyPos(), height - player1.getPlayerHeight())));
+        player2.setyPos(Math.max(0, Math.min(player2.getyPos(), height - player2.getPlayerHeight())));
 
         // If player one misses the ball, player two scores a point
         if (ball.getXPos() < 0) {
             player2.increaseScore();
-            ball.setXPos(Game.WIDTH / 2);
-            ball.setYPos(Game.HEIGHT / 2);
+            ball.setXPos(width / 2);
+            ball.setYPos(height / 2);
             player2.setLastTouched(true);
             Game.gameStarted = false;
         }
 
         // If player two misses the ball, player one scores a point
-        if (ball.getXPos() > Game.WIDTH) {
+        if (ball.getXPos() > width) {
             player1.increaseScore();
-            ball.setXPos(Game.WIDTH / 2);
-            ball.setYPos(Game.HEIGHT / 2);
+            ball.setXPos(width / 2);
+            ball.setYPos(height / 2);
             player1.setLastTouched(true);
             Game.gameStarted = false;
         }

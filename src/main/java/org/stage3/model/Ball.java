@@ -1,68 +1,93 @@
 // Ball.java
 package org.stage3.model;
 
-import javafx.scene.shape.Circle;
+import org.stage3.Game;
 
 import java.util.Random;
 
 /**
  * The type Ball.
  */
-public class Ball  {
+public class Ball {
     private double xPos;
     private double yPos;
 
     private double ballSpeed;
-    private double xSpeed = 1;
-    private double ySpeed = 1;
-
-    private double BALL_R = 15;
-
-    private Circle ballz;
-
+    private double xSpeed;
+    private double ySpeed;
     private double ballSpeedIncrease;
 
+    private double maxSpeed = 1.1;
+
+    /**
+     * Instantiates a new Ball.
+     */
     public Ball() {
-        this.xPos = 0;
-        this.yPos = 0;
-        this.xSpeed = 0;
-        this.ySpeed = 0;
-        this.ballz = new Circle(BALL_R * 2);
+        this.xPos = Game.width / 2;
+        this.yPos = Game.height / 2;
+        this.xSpeed = 0.8;
+        this.ySpeed = 0.8;
+        this.ballSpeed = 0.8;
+        this.ballSpeedIncrease = 0.1;
     }
 
 
     /**
      * Instantiates a new Ball.
      *
-     * @param xPos   the x pos
-     * @param yPos   the y pos
-     * @param xSpeed the x speed
-     * @param ySpeed the y speed
+     * @param ballSpeed         the ball speed
+     * @param ballSpeedIncrease the ball speed increase
      */
-    public Ball(double xPos, double yPos, double xSpeed, double ySpeed) {
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.xSpeed = xSpeed;
-        this.ySpeed = ySpeed;
-        this.ballz = new Circle(BALL_R * 2);
+    public Ball(double ballSpeed, double ballSpeedIncrease) {
+        this.xPos = Game.width / 2;
+        this.yPos = Game.height / 2;
+        this.xSpeed = 0.8;
+        this.ySpeed = 0.8;
+        this.ballSpeed = ballSpeed;
+        this.ballSpeedIncrease = ballSpeedIncrease;
     }
 
+    /**
+     * Gets radius.
+     *
+     * @return the radius
+     */
     public double getRadius() {
-        return BALL_R;
+        return 15;
     }
 
+    /**
+     * Gets ball speed.
+     *
+     * @return the ball speed
+     */
     public double getBallSpeed() {
         return ballSpeed;
     }
 
+    /**
+     * Sets ball speed.
+     *
+     * @param ballSpeed the ball speed
+     */
     public void setBallSpeed(double ballSpeed) {
         this.ballSpeed = ballSpeed;
     }
 
+    /**
+     * Gets ball speed increase.
+     *
+     * @return the ball speed increase
+     */
     public double getBallSpeedIncrease() {
         return ballSpeedIncrease;
     }
 
+    /**
+     * Sets ball speed increase.
+     *
+     * @param ballSpeedIncrease the ball speed increase
+     */
     public void setBallSpeedIncrease(double ballSpeedIncrease) {
         this.ballSpeedIncrease = ballSpeedIncrease;
     }
@@ -141,15 +166,39 @@ public class Ball  {
     }
 
     /**
-     * Adjust speed.
+     * Gets max speed.
+     *
+     * @return the max speed
+     */
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    /**
+     * Sets max speed.
+     *
+     * @param maxSpeed the max speed
+     */
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
+
+    /**
+     * Cap speed.
      *
      * @param increase the increase
      */
-// Method to adjust the ball's speed by a given percentage
-    public void adjustSpeed(double increase) {
-        int maxSpeed = 2;
-        this.xSpeed += this.xSpeed * increase <= maxSpeed ? increase : 0;
-        this.ySpeed += this.ySpeed * increase <= maxSpeed ? increase : 0;
+    public void increaseBallSpeed(double increase) {
+        double newXSpeed = Math.abs(this.xSpeed+=increase);
+        double newYSpeed = Math.abs(this.ySpeed+=increase);
+        this.xSpeed += newXSpeed <= maxSpeed ? newXSpeed : ballSpeed;
+        this.ySpeed += newYSpeed <= maxSpeed ? newYSpeed : ballSpeed;
+    }
+
+    public void checkSpeed() {
+        this.xSpeed = xSpeed <= maxSpeed ? xSpeed : ballSpeed;
+        this.ySpeed = ySpeed <= maxSpeed ? ySpeed : ballSpeed;
     }
 
     /**
@@ -157,13 +206,13 @@ public class Ball  {
      *
      * @param xPos the x pos
      * @param yPos the y pos
-     * @return the ball
      */
-    public static Ball createRandomizedBall(double xPos, double yPos) {
+    public void RandomDirection(double xPos, double yPos) {
         Random random = new Random();
-        double xSpeed = random.nextInt(2) == 0 ? 1 : -1;
-        double ySpeed = random.nextInt(2) == 0 ? 1 : -1;
-        return new Ball(xPos, yPos, xSpeed, ySpeed);
+        this.xSpeed = random.nextInt(2) == 0 ? 1 : -1;
+        this.ySpeed = random.nextInt(2) == 0 ? 1 : -1;
+        setXPos(xPos);
+        setYPos(yPos);
     }
 
     /**
@@ -188,14 +237,5 @@ public class Ball  {
     public void move() {
         xPos += xSpeed;
         yPos += ySpeed;
-    }
-
-    /**
-     * Gets balls.
-     *
-     * @return the balls
-     */
-    public Circle getBalls() {
-        return ballz;
     }
 }
