@@ -196,6 +196,9 @@ public class Ball {
         this.ySpeed += newYSpeed <= maxSpeed ? newYSpeed : ballSpeed;
     }
 
+    /**
+     * Check speed.
+     */
     public void checkSpeed() {
         this.xSpeed = xSpeed <= maxSpeed ? xSpeed : ballSpeed;
         this.ySpeed = ySpeed <= maxSpeed ? ySpeed : ballSpeed;

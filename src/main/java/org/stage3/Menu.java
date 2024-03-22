@@ -100,7 +100,6 @@ public class Menu extends Application {
 
     // Method to start the game with player names and selected settings
     private void startGame(Stage primaryStage) throws Exception {
-        Game.modifiedSettings = true;
         String player1Name = player1NameTextField.getText();
         String player2Name = player2NameTextField.getText();
         int scoreLimit = Integer.parseInt(scoreLimitTextField.getText());

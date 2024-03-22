@@ -3,7 +3,7 @@ package org.stage3.view;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import org.stage3.controller.CollisionTest;
+import org.stage3.controller.Controller;
 import org.stage3.model.Ball;
 import org.stage3.model.Player;
 
@@ -44,7 +44,7 @@ public class View {
         gc.setStroke(Color.WHITE);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setFill(Color.WHITE);
-        if (CollisionTest.isRestarted) {
+        if (Controller.isRestarted) {
             scoreP1 = 0;
             scoreP2 = 0;
         }

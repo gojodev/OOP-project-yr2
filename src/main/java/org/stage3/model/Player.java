@@ -73,18 +73,38 @@ public class Player {
         this.score = score;
     }
 
+    /**
+     * Gets player width.
+     *
+     * @return the player width
+     */
     public double getPlayerWidth() {
         return player_width;
     }
 
+    /**
+     * Sets player width.
+     *
+     * @param width the width
+     */
     public void setPlayerWidth(double width) {
         this.player_width = width;
     }
 
+    /**
+     * Gets player height.
+     *
+     * @return the player height
+     */
     public double getPlayerHeight() {
         return player_height;
     }
 
+    /**
+     * Sets player height.
+     *
+     * @param height the height
+     */
     public void setPlayerHeight(double height) {
         this.player_height = height;
     }
@@ -116,6 +136,9 @@ public class Player {
         return xPos;
     }
 
+    /**
+     * Increase score.
+     */
     public void increaseScore() {
         this.score++;
     }

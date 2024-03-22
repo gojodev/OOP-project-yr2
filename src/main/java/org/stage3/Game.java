@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.stage3.controller.CollisionTest;
+import org.stage3.controller.Controller;
 import org.stage3.model.Ball;
 import org.stage3.model.Player;
 import org.stage3.view.View;
@@ -53,7 +53,7 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private View view;
 
-    private CollisionTest collisionTest;
+    private Controller controller;
 
     /**
      * The constant tl.
@@ -71,11 +71,6 @@ public class Game extends Application { // Class declaration and inheritance fro
     public static boolean isPaused = false;
 
     private boolean won = false;
-
-    /**
-     * The constant modifiedSettings.
-     */
-    public static boolean modifiedSettings = false;
 
     private double scoreLimit;
 
@@ -104,7 +99,7 @@ public class Game extends Application { // Class declaration and inheritance fro
         player2.setPlayerWidth(player_width);
         player1.setPlayerHeight(player_height);
         player2.setPlayerHeight(player_height);
-        System.out.println("Please run from Menu.java first, to customise your inputs");
+        System.out.println("Please run from Menu.java first, to customise your inputs, using default settings");
     }
 
     /**
@@ -115,10 +110,19 @@ public class Game extends Application { // Class declaration and inheritance fro
     public void LoadSettings() throws FileNotFoundException {
         String fileName = "settings.txt";
         try {
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(player1.getName());
+            writer.write("\n" + player2.getName());
+            writer.write("\n" + (int) ball.getBallSpeed());
+            writer.write("\n" + (int) ball.getBallSpeedIncrease());
+            writer.write("\n" + (int) scoreLimit);
+            writer.write("\n" + (int) player1.getPlayerWidth());
+            writer.close();
+            System.out.println("Settings Written to file");
+
             File settingsObj = new File(fileName);
             settingsObj.createNewFile();
             Scanner reader = new Scanner(settingsObj);
-
             // Only use new settings if there are any
             if (reader.hasNextLine()) {
                 player1.setName(reader.nextLine());
@@ -132,28 +136,11 @@ public class Game extends Application { // Class declaration and inheritance fro
                 System.out.println("Using settings from settings.txt at root");
             }
             reader.close();
-
-            // only save settings if they were modified in the Menu class
-            if (modifiedSettings) {
-                // write settings
-                FileWriter writer = new FileWriter(fileName);
-                writer.write(player1.getName());
-                writer.write("\n" + player2.getName());
-                writer.write("\n" + (int) ball.getBallSpeed());
-                writer.write("\n" + (int) ball.getBallSpeedIncrease());
-                writer.write("\n" + (int) scoreLimit);
-                writer.write("\n" + (int) player1.getPlayerWidth());
-                writer.close();
-                System.out.println("Written to file");
-            } else {
-                System.out.println("Using default settings");
-            }
         } catch (Exception e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
-
 
     /**
      * Instantiates a new Game.
@@ -179,6 +166,9 @@ public class Game extends Application { // Class declaration and inheritance fro
         player2.setPlayerHeight(100);
     }
 
+    /**
+     * Center paddles vertically.
+     */
     public void centerPaddles() {
         player1.setyPos(height / 2);
         player2.setyPos(height / 2);
@@ -278,7 +268,7 @@ public class Game extends Application { // Class declaration and inheritance fro
             }
 
             String message;
-            if (player1.isLastTouched() && !CollisionTest.isRestarted) {
+            if (player1.isLastTouched() && !controller.isRestarted) {
                 if (player1.getScore() == scoreLimit) {
                     message = player1.getName() + " won";
                     won = true;
@@ -296,7 +286,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                         System.exit(0);
                     }
                 });
-            } else if (player2.isLastTouched() && !CollisionTest.isRestarted) {
+            } else if (player2.isLastTouched() && !controller.isRestarted) {
                 if (player2.getScore() == scoreLimit) {
                     message = player2.getName() + "won";
                     won = true;
@@ -319,14 +309,14 @@ public class Game extends Application { // Class declaration and inheritance fro
             ball.move();
             // Update the view object everytime the game is running (10ms)
             view = new View(gc, ball, player1, player2, width, height);
-            collisionTest = new CollisionTest(scene, player1, player2, ball, width, height);
-            collisionTest.controls();
+            controller = new Controller(scene, player1, player2, ball, width, height);
+            controller.controls();
             view.DrawScore(player1.getScore(), player2.getScore());
             view.DrawRackets();
             view.DrawBall();
 
-            collisionTest.BallBoundsLogic(ball, player1, player2);
-            collisionTest.PaddleCollision();
+            controller.PaddleCollision();
+            controller.ballCollision(ball, player1, player2);
         }
     }
 
