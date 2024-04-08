@@ -1,14 +1,16 @@
-package org.stage3.controller;
+package org.stage4.controller;
+
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import org.stage3.Game;
-import org.stage3.model.Ball;
-import org.stage3.model.Player;
+import org.stage4.Game;
+import org.stage4.dbHandler;
+import org.stage4.model.Ball;
+import org.stage4.model.Player;
 
 /**
  * The type Player controller.
  */
-public  class Controller {
+public class Controller {
 
     /**
      * The constant isRestarted.
@@ -28,6 +30,8 @@ public  class Controller {
 
     private double width;
     private double height;
+    private dbHandler db;
+
 
     /**
      * Instantiates a new Player controller.
@@ -46,6 +50,7 @@ public  class Controller {
         this.ball = ball;
         this.width = width;
         this.height = height;
+        db = new dbHandler(player1, player2, ball);
     }
 
 
@@ -60,14 +65,11 @@ public  class Controller {
 
             if (keyEvent.getCode() == KeyCode.W) {
                 player1.moveUp();
-            }
-            else if (keyEvent.getCode() == KeyCode.S) {
+            } else if (keyEvent.getCode() == KeyCode.S) {
                 player1.moveDown();
-            }
-            else if (keyEvent.getCode() == KeyCode.UP) {
+            } else if (keyEvent.getCode() == KeyCode.UP) {
                 player2.moveUp();
-            }
-            else if (keyEvent.getCode() == KeyCode.DOWN) {
+            } else if (keyEvent.getCode() == KeyCode.DOWN) {
                 player2.moveDown();
             }
 
@@ -102,10 +104,16 @@ public  class Controller {
                 isRestarted = true;
                 Game.gameStarted = false;
                 System.out.println("Game reset");
+            }
+
+            if (keyEvent.getCode() == KeyCode.T) {
+                db.writeSettings("settings.txt");
             } else {
                 isRestarted = false;
             }
         });
+
+
     }
 
     /**
@@ -173,6 +181,7 @@ public  class Controller {
             ball.setXPos(width / 2);
             ball.setYPos(height / 2);
             player2.setLastTouched(true);
+            player1.setLastTouched(false);
             Game.gameStarted = false;
         }
 
@@ -182,6 +191,7 @@ public  class Controller {
             ball.setXPos(width / 2);
             ball.setYPos(height / 2);
             player1.setLastTouched(true);
+            player2.setLastTouched(false);
             Game.gameStarted = false;
         }
     }

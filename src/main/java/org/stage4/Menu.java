@@ -1,4 +1,4 @@
-package org.stage3;
+package org.stage4;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -8,7 +8,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.stage3.model.Ball;
+import org.stage4.model.Ball;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Scanner;
 
 /**
  * The type Menu.
@@ -22,10 +28,22 @@ public class Menu extends Application {
 
     private TextField racketWidthField;
     private TextField ballSpeedTextField;
-
+    private TextField FeedBackField;
+    /**
+     * The constant settingsFromMenu.
+     */
+    public static boolean settingsFromMenu = false;
+    /**
+     * The constant feedbackGiven.
+     */
+    public static boolean feedbackGiven = false;
+    /**
+     * The constant feedbackgiven.
+     */
+    public static String feedbackgiven = "I loved the game";
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         // Create labels and text fields for entering player names
         Label player1Label = new Label("Player 1 Name:");
         player1NameTextField = new TextField("p1");
@@ -46,6 +64,9 @@ public class Menu extends Application {
         Label racketSizeLabel = new Label("Racket SIze");
         racketWidthField = new TextField("15");
 
+        Label FeedBackLabel = new Label("FeedBack");
+        FeedBackField = new TextField("I loved the game");
+
         // Create a button to start the game
         Button startGameButton = new Button("Start Game");
         startGameButton.setOnAction(event -> {
@@ -60,12 +81,15 @@ public class Menu extends Application {
                 You can press:
                 \t-W to move player 1 up
                 \t-S to move player 1 down
-                
+                                
                 \t-UP to move player 2 up
                 \t-DOWN to move player 2 down
-                
+                                
                 \t-ESC to pause the game
-                \t-R to restart at any time""");
+                \t-R to restart at any time
+                                
+                \t-T to save current Game settings
+                """);
 
         // Create a button to quit the game
         Button quitButton = new Button("Quit");
@@ -82,6 +106,7 @@ public class Menu extends Application {
                 ballSpeedLabel, ballSpeedTextField,
                 ballSpeedIncreaseLabel, ballSpeedIncreaseTextField,
                 racketSizeLabel, racketWidthField,
+                FeedBackLabel, FeedBackField,
                 startGameButton,
                 infoText,
                 quitButton
@@ -110,6 +135,10 @@ public class Menu extends Application {
         // The data to be given to Game.java
         Ball ball = new Ball(ballSpeed, ballSpeedIncrease);
         Game game = new Game(player1Name, player2Name, scoreLimit, racketSize, ball);
+        settingsFromMenu = true;
+        feedbackGiven = true;
+        feedbackgiven = FeedBackField.getText();
+
         game.start(primaryStage);
     }
 

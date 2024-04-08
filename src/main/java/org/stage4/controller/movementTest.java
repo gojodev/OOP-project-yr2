@@ -1,10 +1,8 @@
-package org.stage3.controller;
+package org.stage4.controller;
 
-import org.stage3.model.Ball;
-import org.stage3.model.Player;
+import org.stage4.model.Ball;
+import org.stage4.model.Player;
 import org.junit.Test;
-
-import java.util.ResourceBundle;
 
 import static org.junit.Assert.*;
 

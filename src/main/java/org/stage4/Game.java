@@ -1,4 +1,4 @@
-package org.stage3; // Package declaration, grouping related classes
+package org.stage4; // Package declaration, grouping related classes
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,12 +14,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.stage3.controller.Controller;
-import org.stage3.model.Ball;
-import org.stage3.model.Player;
-import org.stage3.view.View;
-
-import java.io.FileWriter;
+import org.stage4.controller.Controller;
+import org.stage4.model.Ball;
+import org.stage4.model.Player;
+import org.stage4.view.View;
 
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
@@ -72,7 +70,10 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     private boolean won = false;
 
-    private double scoreLimit;
+    /**
+     * The constant scoreLimit.
+     */
+    public static double scoreLimit;
 
     /**
      * The Player width.
@@ -107,35 +108,48 @@ public class Game extends Application { // Class declaration and inheritance fro
      *
      * @throws FileNotFoundException the file not found exception
      */
-    public void LoadSettings() throws FileNotFoundException {
+    public void loadData() throws FileNotFoundException {
         String fileName = "settings.txt";
         try {
-            FileWriter writer = new FileWriter(fileName);
-            writer.write(player1.getName());
-            writer.write("\n" + player2.getName());
-            writer.write("\n" + (int) ball.getBallSpeed());
-            writer.write("\n" + (int) ball.getBallSpeedIncrease());
-            writer.write("\n" + (int) scoreLimit);
-            writer.write("\n" + (int) player1.getPlayerWidth());
-            writer.close();
-            System.out.println("Settings Written to file");
+            // Only load settings from menu
+            if (Menu.settingsFromMenu) {
+                // Write game settings
+                dbHandler db = new dbHandler(player1, player2, ball);
+                db.writeSettings("settings.txt");
 
-            File settingsObj = new File(fileName);
-            settingsObj.createNewFile();
-            Scanner reader = new Scanner(settingsObj);
-            // Only use new settings if there are any
-            if (reader.hasNextLine()) {
-                player1.setName(reader.nextLine());
-                player2.setName(reader.nextLine());
-                ball.setBallSpeed(reader.nextInt());
-                ball.setBallSpeedIncrease(reader.nextInt());
-                this.scoreLimit = reader.nextInt();
-                double PLAYER_WIDTH = reader.nextInt();
-                player1.setPlayerWidth(PLAYER_WIDTH);
-                player2.setPlayerWidth(PLAYER_WIDTH);
-                System.out.println("Using settings from settings.txt at root");
+
+                // Write feedback
+                if (Menu.feedbackGiven) {
+                    db.writeFeedBack("feedback.txt");
+                }
+
+                File settingsObj = new File(fileName);
+                settingsObj.createNewFile();
+                Scanner reader = new Scanner(settingsObj);
+                // Only use new settings if there are any
+                if (reader.hasNextLine()) {
+                    player1.setName(reader.nextLine());
+                    player2.setName(reader.nextLine());
+                    ball.setBallSpeed(reader.nextInt());
+                    ball.setBallSpeedIncrease(reader.nextInt());
+                    scoreLimit = reader.nextInt();
+                    double PLAYER_WIDTH = reader.nextInt();
+                    player1.setPlayerWidth(PLAYER_WIDTH);
+                    player2.setPlayerWidth(PLAYER_WIDTH);
+
+                    System.out.println("Settings found");
+//                System.out.println("Loaded settings: ");
+//                System.out.println("player1: " + player1.getName());
+//                System.out.println("player2: " + player2.getName());
+//                System.out.println("ball speed: " + ball.getBallSpeed());
+//                System.out.println("ball speed increase: " + ball.getBallSpeedIncrease());
+//                System.out.println("score limit: " + scoreLimit);
+//                System.out.println("player width: " + PLAYER_WIDTH);
+                    reader.close();
+                }
+            } else {
+                System.out.println("No settings found, using defaults");
             }
-            reader.close();
         } catch (Exception e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -206,10 +220,10 @@ public class Game extends Application { // Class declaration and inheritance fro
 
     // Application entry point
     public void start(Stage primaryStage) throws FileNotFoundException {
-        System.out.println("Please resize game to your liking");
+        System.out.println("You can give feedback trough Menu.java");
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(400);
-        LoadSettings();
+        loadData();
         primaryStage.setTitle("PONG Game Project");
         Pane root = new Pane();
         scene = new Scene(root, width, height);
@@ -268,7 +282,7 @@ public class Game extends Application { // Class declaration and inheritance fro
             }
 
             String message;
-            if (player1.isLastTouched() && !controller.isRestarted) {
+            if (player1.isLastTouched()) {
                 if (player1.getScore() == scoreLimit) {
                     message = player1.getName() + " won";
                     won = true;
@@ -286,7 +300,7 @@ public class Game extends Application { // Class declaration and inheritance fro
                         System.exit(0);
                     }
                 });
-            } else if (player2.isLastTouched() && !controller.isRestarted) {
+            } else if (player2.isLastTouched()) {
                 if (player2.getScore() == scoreLimit) {
                     message = player2.getName() + "won";
                     won = true;

@@ -1,7 +1,7 @@
 // Ball.java
-package org.stage3.model;
+package org.stage4.model;
 
-import org.stage3.Game;
+import org.stage4.Game;
 
 import java.util.Random;
 

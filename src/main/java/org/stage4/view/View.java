@@ -1,11 +1,11 @@
-package org.stage3.view;
+package org.stage4.view;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import org.stage3.controller.Controller;
-import org.stage3.model.Ball;
-import org.stage3.model.Player;
+import org.stage4.controller.Controller;
+import org.stage4.model.Ball;
+import org.stage4.model.Player;
 
 /**
  * The type View.

@@ -1,7 +1,4 @@
-package org.stage3.model;
-
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
+package org.stage4.model;
 
 /**
  * The type Player.
